@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>DnD GM Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0d0a07;
+    --bg-main: #13100c;
+    --bg-panel: #1a1510;
+    --bg-card: #201a13;
+    --bg-card2: #251f17;
+    --border: #3d3020;
+    --border-gold: #8a6a2e;
+    --gold: #c9923a;
+    --gold-light: #e8b86d;
+    --gold-pale: #f5d898;
+    --red: #c0392b;
+    --red-dark: #8b1a0f;
+    --red-light: #e74c3c;
+    --green: #2e7d32;
+    --green-light: #4caf50;
+    --blue: #1a4a7a;
+    --blue-light: #5b9bd5;
+    --text-main: #e8dcc8;
+    --text-dim: #a08060;
+    --text-muted: #604030;
+    --accent: #c9923a;
+    --shadow: rgba(0,0,0,0.8);
+    --tab-h: 52px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', 'Crimson Text', serif;
+    background: var(--bg-deep);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(180deg, #0a0806 0%, var(--bg-main) 100%);
+    border-bottom: 2px solid var(--border-gold);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.9);
+  }
+
+  .header-title {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--gold-light);
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(201,146,58,0.5);
+  }
+
+  .header-subtitle {
+    font-family: 'Crimson Text', serif;
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .header-decor {
+    font-size: 28px;
+    opacity: 0.6;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    background: var(--bg-main);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 69px;
+    z-index: 90;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    flex: 0 0 auto;
+    padding: 0 22px;
+    height: var(--tab-h);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .tab-btn:hover { color: var(--gold); }
+
+  .tab-btn.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+    background: linear-gradient(180deg, transparent, rgba(201,146,58,0.05));
+  }
+
+  .tab-icon { margin-right: 6px; }
+
+  /* ── PAGE SECTIONS ── */
+  .page { display: none; padding: 20px; animation: fadeIn 0.25s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-gold), transparent);
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, #3d2a0a, #5a3d12);
+    border-color: var(--border-gold);
+    color: var(--gold-light);
+  }
+  .btn-gold:hover { background: linear-gradient(135deg, #5a3d12, #7a5520); border-color: var(--gold); }
+
+  .btn-red {
+    background: linear-gradient(135deg, #3d0a0a, #5a1212);
+    border-color: #6b2020;
+    color: #e88;
+  }
+  .btn-red:hover { background: linear-gradient(135deg, #5a1212, #7a2020); }
+
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  .btn-icon {
+    width: 30px; height: 30px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg-card2);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .btn-icon:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── MEMO PAGE ── */
+  .memo-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .memo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .memo-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .memo-card:hover { border-color: var(--border-gold); }
+
+  .memo-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .memo-type-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+  }
+  .badge-alert { background: rgba(192,57,43,0.3); border: 1px solid #8b1a0f; color: #e88; }
+  .badge-event { background: rgba(26,74,122,0.3); border: 1px solid #1a4a7a; color: var(--blue-light); }
+  .badge-note  { background: rgba(46,125,50,0.3); border: 1px solid #2e5a30; color: var(--green-light); }
+
+  .memo-title-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .memo-body {
+    padding: 12px;
+  }
+
+  .memo-textarea {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-family: 'Noto Sans TC', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+  }
+
+  .memo-footer {
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .memo-time-input {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-dim);
+    font-size: 12px;
+    padding: 2px 6px;
+    outline: none;
+    flex: 1;
+  }
+
+  .memo-ping-btn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid #8b1a0f;
+    background: rgba(192,57,43,0.2);
+    color: #e88;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    transition: all 0.15s;
+  }
+  .memo-ping-btn:hover { background: rgba(192,57,43,0.4); }
+  .memo-ping-btn.pinged { background: rgba(192,57,43,0.6); animation: pulse 1s ease; }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(231,76,60,0.8); }
+    100% { transform: scale(1); }
+  }
+
+  /* ── ALERT OVERLAY ── */
+  .alert-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+  }
+  .alert-overlay.show { display: flex; }
+
+  .alert-box {
+    background: var(--bg-card);
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    padding: 32px 40px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 50px rgba(192,57,43,0.5);
+    animation: alertPop 0.3s ease;
+  }
+
+  @keyframes alertPop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .alert-title {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    color: var(--red-light);
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+
+  .alert-message {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-main);
+    margin-bottom: 20px;
+  }
+
+  /* ── NPC / MONSTER CARDS ── */
+  .entity-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .entity-filter {
+    display: flex;
+    gap: 6px;
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-dim);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Cinzel', serif;
+  }
+  .filter-btn.active-ally { border-color: var(--green-light); color: var(--green-light); background: rgba(76,175,80,0.1); }
+  .filter-btn.active-enemy { border-color: var(--red-light); color: var(--red-light); background: rgba(231,76,60,0.1); }
+  .filter-btn.active-all { border-color: var(--gold); color: var(--gold); background: rgba(201,146,58,0.1); }
+
+  .entity-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  .entity-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+  .entity-card:hover { border-color: var(--border-gold); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+  .entity-card.ally { border-left: 3px solid var(--green); }
+  .entity-card.enemy { border-left: 3px solid var(--red); }
+
+  .entity-header {
+    padding: 12px 14px;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .entity-type-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-ally { background: var(--green-light); box-shadow: 0 0 6px var(--green-light); }
+  .dot-enemy { background: var(--red-light); box-shadow: 0 0 6px var(--red-light); }
+  .dot-monster { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+
+  .entity-name-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    outline: none;
+    min-width: 0;
+  }
+
+  .entity-toggle {
+    color: var(--text-muted);
+    font-size: 12px;
+    transition: transform 0.2s;
+  }
+  .entity-toggle.open { transform: rotate(180deg); }
+
+  .entity-body {
+    display: none;
+    padding: 14px;
+  }
+  .entity-body.open { display: block; }
+
+  /* HP Bar */
+  .hp-section {
+    margin-bottom: 14px;
+  }
+
+  .hp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .hp-label {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    width: 50px;
+    flex-shrink: 0;
+  }
+
+  .hp-input {
+    width: 60px;
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    padding: 4px;
+    outline: none;
+  }
+  .hp-input:focus { border-color: var(--gold); }
+
+  .hp-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-deep);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .hp-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  .hp-adj-btn {
+    width: 26px; height: 26px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg-card2);
+    color: var(--text-dim);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .hp-adj-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hp-delta-input {
+    width: 50px;
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-size: 13px;
+    text-align: center;
+    padding: 3px;
+    outline: none;
+  }
+
+  /* Stats Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .stat-box {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 4px;
+    text-align: center;
+  }
+
+  .stat-abbr {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .stat-val-input {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    outline: none;
+  }
+
+  .stat-mod {
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  /* Fields */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .field-full { grid-column: 1 / -1; }
+
+  .field-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .field-input, .field-textarea {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-family: 'Noto Sans TC', serif;
+    font-size: 13px;
+    padding: 6px 8px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field-input:focus, .field-textarea:focus { border-color: var(--border-gold); }
+
+  .field-textarea {
+    resize: vertical;
+    min-height: 56px;
+    line-height: 1.5;
+  }
+
+  .field-textarea.tall { min-height: 80px; }
+
+  .entity-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+
+  /* ── CONDITIONS TABLE ── */
+  .conditions-intro {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .cond-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+  }
+
+  .cond-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .cond-header {
+    padding: 10px 14px;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cond-name-input {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    color: var(--gold-light);
+    background: none;
+    border: none;
+    outline: none;
+    letter-spacing: 1px;
+    flex: 1;
+  }
+
+  .cond-icon {
+    font-size: 18px;
+    width: 28px;
+    text-align: center;
+  }
+
+  .cond-body {
+    padding: 10px 14px;
+  }
+
+  .cond-effect-textarea {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-family: 'Noto Sans TC', serif;
+    font-size: 13px;
+    line-height: 1.65;
+    resize: none;
+    outline: none;
+    min-height: 70px;
+  }
+
+  .add-cond-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--bg-card);
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .add-cond-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-text { font-family: 'Crimson Text', serif; font-size: 16px; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-main); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-gold); }
+
+  /* ── GOOGLE SHEETS SYNC ── */
+  .sync-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg, var(--bg-main) 0%, #0a0806 100%);
+    border-top: 1px solid var(--border-gold);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 200;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.8);
+    flex-wrap: wrap;
+  }
+
+  .sync-label {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .sync-input {
+    flex: 1;
+    min-width: 200px;
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-size: 12px;
+    padding: 6px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    font-family: monospace;
+  }
+  .sync-input:focus { border-color: var(--border-gold); }
+  .sync-input::placeholder { color: var(--text-muted); }
+
+  .sync-status {
+    font-size: 11px;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+  .sync-status.idle { color: var(--text-muted); }
+  .sync-status.syncing { color: var(--gold); animation: syncPulse 1s ease infinite; }
+  .sync-status.ok { color: var(--green-light); background: rgba(76,175,80,0.1); border: 1px solid #2e7d32; }
+  .sync-status.err { color: #e88; background: rgba(192,57,43,0.1); border: 1px solid #8b1a0f; }
+
+  @keyframes syncPulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+
+  .sync-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+  }
+  .sync-modal-overlay.show { display: flex; }
+
+  .sync-modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    padding: 28px 32px;
+    max-width: 560px;
+    width: 90%;
+    box-shadow: 0 0 40px rgba(201,146,58,0.2);
+  }
+
+  .sync-modal h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light);
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  .sync-modal p, .sync-modal li {
+    font-size: 13px;
+    color: var(--text-main);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .sync-modal ol { padding-left: 18px; }
+  .sync-modal code {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 11px;
+    color: var(--gold-pale);
+    word-break: break-all;
+  }
+
+  .sync-modal textarea {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--gold-pale);
+    font-size: 11px;
+    font-family: monospace;
+    padding: 10px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.5;
+    margin: 8px 0;
+  }
+
+  .sync-modal-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    justify-content: flex-end;
+  }
+
+  /* body padding to avoid content hidden behind sync bar */
+  body { padding-bottom: 56px; }
+
+  /* ── MISC ── */
+  select.field-input {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a6a2e'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+  }
+  .tag-ally { background: rgba(46,125,50,0.2); border: 1px solid #2e7d32; color: var(--green-light); }
+  .tag-enemy { background: rgba(139,26,15,0.2); border: 1px solid #8b1a0f; color: #e88; }
+
+  .search-input {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-size: 13px;
+    padding: 7px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 180px;
+  }
+  .search-input:focus { border-color: var(--border-gold); }
+  .search-input::placeholder { color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <div class="header-title">⚔ DUNGEON MASTER</div>
+    <div class="header-subtitle">Campaign Dashboard · D&D 5e</div>
+  </div>
+  <div class="header-decor">🐉</div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('memo')"><span class="tab-icon">📜</span>備忘錄</button>
+  <button class="tab-btn" onclick="switchTab('ally')"><span class="tab-icon">🛡</span>友軍 NPC</button>
+  <button class="tab-btn" onclick="switchTab('enemy')"><span class="tab-icon">⚔</span>敵軍 NPC</button>
+  <button class="tab-btn" onclick="switchTab('monster')"><span class="tab-icon">💀</span>怪物</button>
+  <button class="tab-btn" onclick="switchTab('conditions')"><span class="tab-icon">⚗</span>異常狀態</button>
+</div>
+
+<!-- ════════════════════════════════════════ MEMO PAGE -->
+<div class="page active" id="page-memo">
+  <div class="section-header">
+    <span class="section-title">📜 備忘錄 / 事件提示</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="memo-toolbar">
+    <button class="btn btn-gold" onclick="addMemo('note')">＋ 備忘</button>
+    <button class="btn btn-gold" onclick="addMemo('alert')">🔔 提示事件</button>
+    <button class="btn btn-gold" onclick="addMemo('event')">📅 計時事件</button>
+  </div>
+
+  <div class="memo-grid" id="memo-grid">
+    <!-- 預設範例 -->
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ ALLY PAGE -->
+<div class="page" id="page-ally">
+  <div class="section-header">
+    <span class="section-title">🛡 友軍 NPC</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="entity-toolbar">
+    <button class="btn btn-gold" onclick="addEntity('ally')">＋ 新增友軍</button>
+    <input class="search-input" type="text" placeholder="🔍 搜尋名稱…" oninput="filterEntities('ally', this.value)">
+  </div>
+  <div class="entity-list" id="list-ally"></div>
+</div>
+
+<!-- ════════════════════════════════════════ ENEMY PAGE -->
+<div class="page" id="page-enemy">
+  <div class="section-header">
+    <span class="section-title">⚔ 敵軍 NPC</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="entity-toolbar">
+    <button class="btn btn-gold" onclick="addEntity('enemy')">＋ 新增敵軍</button>
+    <input class="search-input" type="text" placeholder="🔍 搜尋名稱…" oninput="filterEntities('enemy', this.value)">
+  </div>
+  <div class="entity-list" id="list-enemy"></div>
+</div>
+
+<!-- ════════════════════════════════════════ MONSTER PAGE -->
+<div class="page" id="page-monster">
+  <div class="section-header">
+    <span class="section-title">💀 怪物資訊</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="entity-toolbar">
+    <button class="btn btn-gold" onclick="addEntity('monster')">＋ 新增怪物</button>
+    <input class="search-input" type="text" placeholder="🔍 搜尋名稱…" oninput="filterEntities('monster', this.value)">
+  </div>
+  <div class="entity-list" id="list-monster"></div>
+</div>
+
+<!-- ════════════════════════════════════════ CONDITIONS PAGE -->
+<div class="page" id="page-conditions">
+  <div class="section-header">
+    <span class="section-title">⚗ D&D 5e 異常狀態</span>
+    <div class="section-line"></div>
+  </div>
+  <p class="conditions-intro">以下為 D&D 5e 標準異常狀態效果說明，內容均可直接編輯修改。點選文字即可微調說明。</p>
+
+  <div class="cond-grid" id="cond-grid"></div>
+
+  <br>
+  <button class="add-cond-btn" onclick="addCondition()">
+    ＋ 新增自訂異常狀態
+  </button>
+</div>
+
+<!-- GOOGLE SHEETS SYNC BAR -->
+<div class="sync-bar">
+  <span class="sync-label">📊 Google Sheets</span>
+  <input class="sync-input" id="sheetUrlInput" type="text" placeholder="貼上 Apps Script 網址 (Web App URL)…" oninput="saveSyncUrl()">
+  <button class="btn btn-gold btn-sm" onclick="syncToSheet()">⬆ 儲存至 Sheet</button>
+  <button class="btn btn-gold btn-sm" onclick="loadFromSheet()">⬇ 從 Sheet 讀取</button>
+  <button class="btn btn-sm" style="border-color:var(--border);color:var(--text-dim);background:var(--bg-card2);" onclick="showSyncHelp()">❓ 設定說明</button>
+  <span class="sync-status idle" id="syncStatus">未連線</span>
+</div>
+
+<!-- SYNC HELP MODAL -->
+<div class="sync-modal-overlay" id="syncModalOverlay" onclick="closeSyncModal(event)">
+  <div class="sync-modal">
+    <h2>⚙ Google Sheets 同步設定</h2>
+    <ol>
+      <li>開啟 <strong>Google Sheets</strong>，建立新試算表，記下 <strong>試算表 ID</strong>（網址中 <code>/d/</code> 和 <code>/edit</code> 之間的部分）。</li>
+      <li>點選選單「<strong>擴充功能 → Apps Script</strong>」。</li>
+      <li>清空編輯器，貼入下方程式碼並儲存（Ctrl+S）：</li>
+    </ol>
+    <textarea rows="14" readonly id="appsScriptCode"></textarea>
+    <ol start="4">
+      <li>點選「<strong>部署 → 新增部署</strong>」，類型選「<strong>網頁應用程式</strong>」。</li>
+      <li>執行身分選「<strong>我</strong>」，存取對象選「<strong>任何人</strong>」，按「<strong>部署</strong>」。</li>
+      <li>複製產生的 <strong>網頁應用程式 URL</strong>，貼入上方輸入框。</li>
+      <li>首次使用時需授權 Google 帳號存取試算表。</li>
+    </ol>
+    <p style="color:var(--gold);font-size:12px;">⚡ 資料自動分欄：單格超過 45,000 字元時自動換至下一欄，確保永久可用。</p>
+    <div class="sync-modal-footer">
+      <button class="btn btn-gold" onclick="copyAppsScript()">📋 複製程式碼</button>
+      <button class="btn btn-red" onclick="document.getElementById('syncModalOverlay').classList.remove('show')">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT OVERLAY -->
+<div class="alert-overlay" id="alertOverlay" onclick="closeAlert(event)">
+  <div class="alert-box">
+    <div class="alert-title" id="alertTitle">⚠ 事件觸發！</div>
+    <div class="alert-message" id="alertMessage"></div>
+    <button class="btn btn-gold" onclick="document.getElementById('alertOverlay').classList.remove('show')">確認</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// TAB SWITCHING
+// ════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ════════════════════════════════════════
+// MEMO
+// ════════════════════════════════════════
+let memoId = 0;
+
+function addMemo(type) {
+  const id = ++memoId;
+  const grid = document.getElementById('memo-grid');
+  const badgeMap = { note: ['badge-note','備忘'], alert: ['badge-alert','提示'], event: ['badge-event','計時'] };
+  const [badgeCls, badgeLabel] = badgeMap[type];
+
+  const card = document.createElement('div');
+  card.className = 'memo-card';
+  card.id = 'memo-' + id;
+
+  card.innerHTML = `
+    <div class="memo-card-header">
+      <span class="memo-type-badge ${badgeCls}">${badgeLabel}</span>
+      <input class="memo-title-input" placeholder="標題…" value="">
+      <button class="btn-icon" onclick="deleteMemo(${id})" title="刪除">✕</button>
+    </div>
+    <div class="memo-body">
+      <textarea class="memo-textarea" placeholder="在此記錄內容、提示玩家的話、事件描述…" rows="4"></textarea>
+    </div>
+    <div class="memo-footer">
+      ${type === 'event' ? `<input class="memo-time-input" type="text" placeholder="觸發時機 / 回合 / 時間…">` : `<span style="flex:1;color:var(--text-muted);font-size:11px;">點選文字即可編輯</span>`}
+      <button class="memo-ping-btn" onclick="pingMemo(${id})">🔔 提示玩家</button>
+    </div>
+  `;
+  grid.prepend(card);
+}
+
+function deleteMemo(id) {
+  const el = document.getElementById('memo-' + id);
+  if (el) el.remove();
+}
+
+function pingMemo(id) {
+  const card = document.getElementById('memo-' + id);
+  const title = card.querySelector('.memo-title-input').value || '（無標題）';
+  const msg = card.querySelector('.memo-textarea').value || '（無內容）';
+  showAlert('⚠ ' + title, msg);
+  const btn = card.querySelector('.memo-ping-btn');
+  btn.classList.add('pinged');
+  setTimeout(() => btn.classList.remove('pinged'), 1500);
+}
+
+function showAlert(title, msg) {
+  document.getElementById('alertTitle').textContent = title;
+  document.getElementById('alertMessage').textContent = msg;
+  document.getElementById('alertOverlay').classList.add('show');
+}
+
+function closeAlert(e) {
+  if (e.target === document.getElementById('alertOverlay')) {
+    document.getElementById('alertOverlay').classList.remove('show');
+  }
+}
+
+// ════════════════════════════════════════
+// ENTITY (NPC / MONSTER)
+// ════════════════════════════════════════
+let entityId = 0;
+
+function getMod(val) {
+  const v = parseInt(val) || 10;
+  const mod = Math.floor((v - 10) / 2);
+  return (mod >= 0 ? '+' : '') + mod;
+}
+
+function addEntity(type) {
+  const id = ++entityId;
+  const container = document.getElementById('list-' + type);
+
+  const dotClass = type === 'ally' ? 'dot-ally' : type === 'enemy' ? 'dot-enemy' : 'dot-monster';
+  const cardClass = type === 'ally' ? 'ally' : type === 'enemy' ? 'enemy' : '';
+
+  const stats = ['STR','DEX','CON','INT','WIS','CHA'];
+
+  let statBoxes = stats.map(s => `
+    <div class="stat-box">
+      <span class="stat-abbr">${s}</span>
+      <input class="stat-val-input" type="number" value="10" min="1" max="30"
+        oninput="updateMod(this)" id="stat-${id}-${s}">
+      <div class="stat-mod" id="mod-${id}-${s}">+0</div>
+    </div>
+  `).join('');
+
+  const defaultHP = type === 'monster' ? 50 : 30;
+  const defaultMax = defaultHP;
+
+  const card = document.createElement('div');
+  card.className = `entity-card ${cardClass}`;
+  card.id = `entity-${id}`;
+
+  card.innerHTML = `
+    <div class="entity-header" onclick="toggleEntity(${id})">
+      <span class="entity-type-dot ${dotClass}"></span>
+      <input class="entity-name-input" placeholder="名稱…" onclick="event.stopPropagation()">
+      <span class="entity-toggle" id="toggle-${id}">▼</span>
+    </div>
+    <div class="entity-body" id="body-${id}">
+      <!-- HP -->
+      <div class="hp-section">
+        <div class="hp-row">
+          <span class="hp-label">HP</span>
+          <button class="hp-adj-btn" onclick="adjHP(${id},-1)">−</button>
+          <input class="hp-delta-input" id="hpdelta-${id}" type="number" value="1" min="1">
+          <button class="hp-adj-btn" onclick="adjHP(${id},1)">＋</button>
+          <input class="hp-input" id="hpcur-${id}" type="number" value="${defaultHP}" oninput="updateHP(${id})">
+          <span style="color:var(--text-muted);font-size:13px;">/</span>
+          <input class="hp-input" id="hpmax-${id}" type="number" value="${defaultMax}" oninput="updateHP(${id})">
+          <div class="hp-bar-wrap" style="min-width:60px">
+            <div class="hp-bar" id="hpbar-${id}" style="width:100%;background:var(--green-light)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-grid">${statBoxes}</div>
+
+      <!-- FIELDS -->
+      <div class="field-grid">
+        <div>
+          <div class="field-label">🛡 護甲值 (AC)</div>
+          <input class="field-input" type="number" placeholder="10" min="1" max="30">
+        </div>
+        <div>
+          <div class="field-label">👁 被動感知</div>
+          <input class="field-input" type="number" placeholder="10">
+        </div>
+
+        <div class="field-full">
+          <div class="field-label">🌟 被動能力 / 特性</div>
+          <textarea class="field-textarea" placeholder="例：暗視覺 60尺、魔法抗性…"></textarea>
+        </div>
+
+        <div class="field-full">
+          <div class="field-label">⚔ 普通攻擊</div>
+          <textarea class="field-textarea" placeholder="例：長劍 +5 命中，1d8+3 斬擊傷害…"></textarea>
+        </div>
+
+        <div class="field-full">
+          <div class="field-label">✨ 主要技能 / 法術</div>
+          <textarea class="field-textarea tall" placeholder="例：火球術 (DC15)，60尺，8d6 火焰，半傷豁免…"></textarea>
+        </div>
+
+        <div>
+          <div class="field-label">➕ 附贈動作</div>
+          <textarea class="field-textarea" placeholder="附贈動作…"></textarea>
+        </div>
+        <div>
+          <div class="field-label">⚡ 反應</div>
+          <textarea class="field-textarea" placeholder="反應技能…"></textarea>
+        </div>
+
+        <div class="field-full">
+          <div class="field-label">⭐ 特殊備註</div>
+          <textarea class="field-textarea" placeholder="弱點、免疫、傳奇動作、圖騰效果…"></textarea>
+        </div>
+
+        <div class="field-full">
+          <div class="field-label">📖 簡介 / 背景</div>
+          <textarea class="field-textarea tall" placeholder="角色背景、個性、動機、與玩家的關係…"></textarea>
+        </div>
+      </div>
+
+      <div class="entity-actions">
+        <button class="btn btn-red btn-sm" onclick="deleteEntity(${id})">🗑 刪除</button>
+      </div>
+    </div>
+  `;
+
+  container.prepend(card);
+  toggleEntity(id);
+}
+
+function toggleEntity(id) {
+  const body = document.getElementById('body-' + id);
+  const tog = document.getElementById('toggle-' + id);
+  body.classList.toggle('open');
+  tog.classList.toggle('open');
+}
+
+function deleteEntity(id) {
+  const el = document.getElementById('entity-' + id);
+  if (el) el.remove();
+}
+
+function updateMod(input) {
+  const parts = input.id.split('-'); // stat-{id}-{ABBR}
+  const id = parts[1];
+  const abbr = parts[2];
+  const mod = getMod(input.value);
+  const modEl = document.getElementById(`mod-${id}-${abbr}`);
+  if (modEl) modEl.textContent = mod;
+}
+
+function updateHP(id) {
+  const cur = parseInt(document.getElementById('hpcur-' + id).value) || 0;
+  const max = parseInt(document.getElementById('hpmax-' + id).value) || 1;
+  const pct = Math.min(100, Math.max(0, (cur / max) * 100));
+  const bar = document.getElementById('hpbar-' + id);
+  bar.style.width = pct + '%';
+  if (pct > 60) bar.style.background = 'var(--green-light)';
+  else if (pct > 25) bar.style.background = '#f0a020';
+  else bar.style.background = 'var(--red-light)';
+}
+
+function adjHP(id, dir) {
+  const delta = parseInt(document.getElementById('hpdelta-' + id).value) || 1;
+  const curEl = document.getElementById('hpcur-' + id);
+  const maxVal = parseInt(document.getElementById('hpmax-' + id).value) || 9999;
+  let cur = parseInt(curEl.value) || 0;
+  cur = Math.min(maxVal, Math.max(0, cur + dir * delta));
+  curEl.value = cur;
+  updateHP(id);
+}
+
+function filterEntities(type, query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll(`#list-${type} .entity-card`).forEach(card => {
+    const name = card.querySelector('.entity-name-input').value.toLowerCase();
+    card.style.display = name.includes(q) ? '' : 'none';
+  });
+}
+
+// ════════════════════════════════════════
+// CONDITIONS
+// ════════════════════════════════════════
+const defaultConditions = [
+  { icon:'🦷', name:'昏盲 Blinded', effect:'• 無法看見，自動失敗需要視覺的能力檢定。\n• 對昏盲狀態的生物進行攻擊擲骰有利（優勢）。\n• 昏盲狀態的生物進行攻擊擲骰有劣勢。' },
+  { icon:'😱', name:'魅惑 Charmed', effect:'• 被魅惑者無法對魅惑來源發動攻擊或施放傷害法術。\n• 魅惑來源在需要社交的能力檢定中對被魅惑者有優勢。' },
+  { icon:'😶', name:'耳聾 Deafened', effect:'• 無法聽到任何聲音，自動失敗所有需要聽覺的能力檢定。' },
+  { icon:'😱', name:'恐懼 Frightened', effect:'• 在恐懼來源視線範圍內，能力檢定與攻擊擲骰有劣勢。\n• 無法主動接近恐懼來源所在的空間。' },
+  { icon:'🤝', name:'擒抱 Grappled', effect:'• 移動速度變為 0，且無法從速度加成中獲益。\n• 如果擒抱者失能，此狀態立即解除。' },
+  { icon:'🚫', name:'失能 Incapacitated', effect:'• 無法採取任何動作或反應。' },
+  { icon:'👻', name:'隱形 Invisible', effect:'• 若無特殊感知，無法被看見。對隱形生物的攻擊有劣勢。\n• 隱形生物的攻擊有優勢。' },
+  { icon:'🧨', name:'癱瘓 Paralyzed', effect:'• 失能（無行動/反應），且無法移動或說話。\n• 近身命中自動視為致命一擊。\n• 自動失敗力量與敏捷豁免。' },
+  { icon:'🪨', name:'石化 Petrified', effect:'• 變成固體，重量增加十倍，失能、移動歸零。\n• 對所有傷害有抗性；免疫毒素和心靈狀態。\n• 自動失敗力量與敏捷豁免。' },
+  { icon:'☠️', name:'中毒 Poisoned', effect:'• 攻擊擲骰與能力檢定有劣勢。' },
+  { icon:'🛌', name:'倒地 Prone', effect:'• 只能緩慢爬行移動（耗費雙倍移動力）。\n• 近戰攻擊有劣勢；5尺內近戰攻擊者有優勢，遠程有劣勢。\n• 起身需花費一半移動力。' },
+  { icon:'⛓', name:'束縛 Restrained', effect:'• 移動速度為 0。\n• 攻擊擲骰有劣勢；對束縛者的攻擊有優勢。\n• 敏捷豁免有劣勢。' },
+  { icon:'💤', name:'昏迷 Stunned', effect:'• 失能，無法移動，只能緩慢說話。\n• 自動失敗力量與敏捷豁免。\n• 對昏迷者的攻擊有優勢。' },
+  { icon:'💀', name:'無意識 Unconscious', effect:'• 失能、無法移動說話，對周遭無感知。\n• 自動失敗力量與敏捷豁免，近身命中為致命一擊。\n• 跌落倒地狀態。' },
+  { icon:'🔥', name:'燃燒 On Fire（擴充）', effect:'• 每回合受到 1d6 火焰傷害。\n• 可用一個行動在地上打滾撲滅（DC10 敏捷豁免）。\n• ※ 非官方，依桌規調整。' },
+  { icon:'🌀', name:'眩暈 Dazed（擴充）', effect:'• 每回合只能使用動作、附贈動作、反應其中之一（非官方狀態，One D&D 提案）。\n• ※ 依版本與桌規自行調整。' },
+];
+
+let condId = 0;
+
+function buildConditions() {
+  const grid = document.getElementById('cond-grid');
+  defaultConditions.forEach(c => {
+    grid.appendChild(createCondCard(c.icon, c.name, c.effect));
+  });
+}
+
+function createCondCard(icon, name, effect) {
+  const id = ++condId;
+  const div = document.createElement('div');
+  div.className = 'cond-card';
+  div.id = 'cond-' + id;
+  div.innerHTML = `
+    <div class="cond-header">
+      <span class="cond-icon">${icon}</span>
+      <input class="cond-name-input" value="${name}">
+      <button class="btn-icon" onclick="document.getElementById('cond-${id}').remove()" title="刪除">✕</button>
+    </div>
+    <div class="cond-body">
+      <textarea class="cond-effect-textarea" rows="5">${effect}</textarea>
+    </div>
+  `;
+  return div;
+}
+
+function addCondition() {
+  const grid = document.getElementById('cond-grid');
+  grid.appendChild(createCondCard('✨','新增狀態','在此輸入效果說明…'));
+}
+
+
+// ════════════════════════════════════════
+// GOOGLE SHEETS SYNC
+// ════════════════════════════════════════
+
+const CELL_LIMIT = 45000; // 安全上限（Google Sheets 單格最大 50,000 字元）
+
+// ── Apps Script 程式碼模板（doGet + JSONP，解決 CORS）──
+const APPS_SCRIPT_CODE = `// ★ 請將下方 SHEET_ID 替換為你的試算表 ID ★
+const SHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
+const SHEET_NAME = 'DnD_Dashboard';
+
+// 使用 doGet + JSONP 解決跨域 (CORS) 問題
+function doGet(e) {
+  try {
+    const cb   = e.parameter.callback || 'cb';
+    const action = e.parameter.action;
+    const sheet = getOrCreateSheet();
+
+    // ── 儲存 ──
+    if (action === 'save') {
+      const totalChunks = parseInt(e.parameter.total) || 1;
+      const idx         = parseInt(e.parameter.idx)   || 0;
+      const chunk       = e.parameter.chunk || '';
+
+      // 第一個 chunk 時先清空、寫 header
+      if (idx === 0) {
+        sheet.clearContents();
+        sheet.getRange(1, 1).setValue('DnD Dashboard Backup');
+        sheet.getRange(1, 2).setValue(new Date().toISOString());
+        sheet.getRange(1, 3).setValue('chunks:' + totalChunks);
+      }
+      // 資料從第 2 列開始，逐欄寫入
+      sheet.getRange(2, idx + 1).setValue(chunk);
+      return jsonp(cb, { status: 'ok', idx, total: totalChunks });
+    }
+
+    // ── 讀取 ──
+    if (action === 'load') {
+      const lastCol = sheet.getLastColumn();
+      if (lastCol < 1) return jsonp(cb, { status: 'empty' });
+      const header  = sheet.getRange(1, 3).getValue();
+      const match   = String(header).match(/chunks:(\\d+)/);
+      const count   = match ? parseInt(match[1]) : 1;
+      const chunks  = [];
+      for (let i = 0; i < count; i++) {
+        chunks.push(String(sheet.getRange(2, i + 1).getValue()));
+      }
+      return jsonp(cb, { status: 'ok', chunks });
+    }
+
+    return jsonp(cb, { status: 'error', msg: 'Unknown action' });
+  } catch(err) {
+    const cb = (e.parameter && e.parameter.callback) || 'cb';
+    return jsonp(cb, { status: 'error', msg: err.toString() });
+  }
+}
+
+function getOrCreateSheet() {
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(SHEET_NAME);
+  return sheet;
+}
+
+// JSONP 回應：callback({...})
+function jsonp(cb, obj) {
+  const body = cb + '(' + JSON.stringify(obj) + ')';
+  return ContentService.createTextOutput(body)
+    .setMimeType(ContentService.MimeType.JAVASCRIPT);
+}`;
+
+// ── 初始化 ──
+document.addEventListener('DOMContentLoaded', () => {
+  const savedUrl = localStorage.getItem('dnd_sheet_url');
+  if (savedUrl) document.getElementById('sheetUrlInput').value = savedUrl;
+  document.getElementById('appsScriptCode').value = APPS_SCRIPT_CODE;
+});
+
+function saveSyncUrl() {
+  const url = document.getElementById('sheetUrlInput').value.trim();
+  localStorage.setItem('dnd_sheet_url', url);
+}
+
+// ── 分割大字串為多個 chunk ──
+function splitChunks(str) {
+  const chunks = [];
+  let pos = 0;
+  while (pos < str.length) {
+    chunks.push(str.slice(pos, pos + CELL_LIMIT));
+    pos += CELL_LIMIT;
+  }
+  return chunks.length ? chunks : [''];
+}
+
+// ── 合併 chunks ──
+function joinChunks(chunks) {
+  return chunks.join('');
+}
+
+// ── 收集目前 Dashboard 所有資料 ──
+function collectDashboardData() {
+  const data = {
+    version: 2,
+    savedAt: new Date().toISOString(),
+    memos: [],
+    entities: { ally: [], enemy: [], monster: [] },
+    conditions: []
+  };
+
+  // 備忘錄
+  document.querySelectorAll('#memo-grid .memo-card').forEach(card => {
+    const badge = card.querySelector('.memo-type-badge');
+    const title = card.querySelector('.memo-title-input')?.value ?? '';
+    const body = card.querySelector('.memo-textarea')?.value ?? '';
+    const time = card.querySelector('.memo-time-input')?.value ?? '';
+    data.memos.push({
+      type: badge ? badge.textContent.trim() : '',
+      badgeCls: badge ? [...badge.classList].find(c => c.startsWith('badge-')) : '',
+      title, body, time
+    });
+  });
+
+  // NPC / 怪物
+  ['ally','enemy','monster'].forEach(type => {
+    document.querySelectorAll(`#list-${type} .entity-card`).forEach(card => {
+      const idMatch = card.id.match(/entity-(\d+)/);
+      if (!idMatch) return;
+      const eid = idMatch[1];
+      const stats = {};
+      ['STR','DEX','CON','INT','WIS','CHA'].forEach(s => {
+        const el = document.getElementById(`stat-${eid}-${s}`);
+        stats[s] = el ? el.value : '10';
+      });
+      const fields = [...card.querySelectorAll('.field-input, .field-textarea')];
+      data.entities[type].push({
+        name: card.querySelector('.entity-name-input')?.value ?? '',
+        hpCur: document.getElementById(`hpcur-${eid}`)?.value ?? '0',
+        hpMax: document.getElementById(`hpmax-${eid}`)?.value ?? '0',
+        stats,
+        fields: fields.map(f => f.value)
+      });
+    });
+  });
+
+  // 異常狀態
+  document.querySelectorAll('#cond-grid .cond-card').forEach(card => {
+    data.conditions.push({
+      icon: card.querySelector('.cond-icon')?.textContent ?? '',
+      name: card.querySelector('.cond-name-input')?.value ?? '',
+      effect: card.querySelector('.cond-effect-textarea')?.value ?? ''
+    });
+  });
+
+  return data;
+}
+
+// ── 設定同步狀態顯示 ──
+function setSyncStatus(state, msg) {
+  const el = document.getElementById('syncStatus');
+  el.className = 'sync-status ' + state;
+  el.textContent = msg;
+}
+
+// ── JSONP 請求工具（解決 CORS 問題）──
+function jsonpRequest(url, params) {
+  return new Promise((resolve, reject) => {
+    const cbName = '_gsync_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      script.remove();
+      reject(new Error('請求逾時，請確認 URL 是否正確'));
+    }, 15000);
+
+    window[cbName] = function(data) {
+      clearTimeout(timeout);
+      delete window[cbName];
+      script.remove();
+      resolve(data);
+    };
+
+    const qs = Object.entries({ ...params, callback: cbName })
+      .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
+      .join('&');
+
+    const script = document.createElement('script');
+    script.src = url + '?' + qs;
+    script.onerror = () => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      reject(new Error('Script 載入失敗，請確認 URL 是否正確且已部署'));
+    };
+    document.head.appendChild(script);
+  });
+}
+
+// ── 儲存至 Google Sheet（逐欄傳送每個 chunk）──
+async function syncToSheet() {
+  const url = document.getElementById('sheetUrlInput').value.trim();
+  if (!url) { alert('請先貼上 Apps Script Web App URL！'); return; }
+
+  setSyncStatus('syncing', '⟳ 收集資料…');
+  try {
+    const data = collectDashboardData();
+    const jsonStr = JSON.stringify(data);
+    const chunks = splitChunks(jsonStr);
+
+    for (let i = 0; i < chunks.length; i++) {
+      setSyncStatus('syncing', `⟳ 傳送 ${i+1}/${chunks.length} 欄…`);
+      const res = await jsonpRequest(url, {
+        action: 'save',
+        idx: i,
+        total: chunks.length,
+        chunk: chunks[i]
+      });
+      if (res.status !== 'ok') throw new Error(res.msg || '儲存失敗');
+    }
+
+    const savedAt = new Date().toLocaleString('zh-TW');
+    setSyncStatus('ok', `✓ 已儲存 (${chunks.length} 欄) ${savedAt}`);
+  } catch(e) {
+    setSyncStatus('err', '✗ ' + e.message);
+  }
+}
+
+// ── 從 Google Sheet 讀取還原 ──
+async function loadFromSheet() {
+  const url = document.getElementById('sheetUrlInput').value.trim();
+  if (!url) { alert('請先貼上 Apps Script Web App URL！'); return; }
+  if (!confirm('確定要從 Google Sheet 讀取資料？目前的資料將被覆蓋。')) return;
+
+  setSyncStatus('syncing', '⟳ 讀取中…');
+  try {
+    const res = await jsonpRequest(url, { action: 'load' });
+
+    if (res.status === 'empty') {
+      setSyncStatus('err', '⚠ Sheet 尚無資料');
+      return;
+    }
+    if (res.status !== 'ok') throw new Error(res.msg || '讀取失敗');
+
+    const jsonStr = joinChunks(res.chunks);
+    const data = JSON.parse(jsonStr);
+    restoreDashboardData(data);
+    const savedAt = new Date().toLocaleString('zh-TW');
+    setSyncStatus('ok', `✓ 已讀取 (${res.chunks.length} 欄) ${savedAt}`);
+  } catch(e) {
+    setSyncStatus('err', '✗ ' + e.message);
+  }
+}
+
+// ── 還原 Dashboard 資料 ──
+function restoreDashboardData(data) {
+  // 清除現有資料
+  document.getElementById('memo-grid').innerHTML = '';
+  document.getElementById('list-ally').innerHTML = '';
+  document.getElementById('list-enemy').innerHTML = '';
+  document.getElementById('list-monster').innerHTML = '';
+  document.getElementById('cond-grid').innerHTML = '';
+  memoId = 0; entityId = 0; condId = 0;
+
+  // 還原備忘錄
+  (data.memos || []).forEach(m => {
+    const id = ++memoId;
+    const grid = document.getElementById('memo-grid');
+    const card = document.createElement('div');
+    card.className = 'memo-card';
+    card.id = 'memo-' + id;
+    const isEvent = m.badgeCls === 'badge-event';
+    card.innerHTML = `
+      <div class="memo-card-header">
+        <span class="memo-type-badge ${m.badgeCls}">${m.type}</span>
+        <input class="memo-title-input" placeholder="標題…" value="${escH(m.title)}">
+        <button class="btn-icon" onclick="deleteMemo(${id})" title="刪除">✕</button>
+      </div>
+      <div class="memo-body">
+        <textarea class="memo-textarea" rows="4">${escH(m.body)}</textarea>
+      </div>
+      <div class="memo-footer">
+        ${isEvent ? `<input class="memo-time-input" type="text" placeholder="觸發時機…" value="${escH(m.time)}">` : `<span style="flex:1;color:var(--text-muted);font-size:11px;">點選文字即可編輯</span>`}
+        <button class="memo-ping-btn" onclick="pingMemo(${id})">🔔 提示玩家</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // 還原 entities
+  ['ally','enemy','monster'].forEach(type => {
+    (data.entities?.[type] || []).forEach(e => {
+      addEntity(type);
+      const eid = entityId;
+      const card = document.getElementById('entity-' + eid);
+      if (!card) return;
+      const nameInput = card.querySelector('.entity-name-input');
+      if (nameInput) nameInput.value = e.name;
+      const curEl = document.getElementById('hpcur-' + eid);
+      const maxEl = document.getElementById('hpmax-' + eid);
+      if (curEl) curEl.value = e.hpCur;
+      if (maxEl) maxEl.value = e.hpMax;
+      updateHP(eid);
+      ['STR','DEX','CON','INT','WIS','CHA'].forEach(s => {
+        const el = document.getElementById(`stat-${eid}-${s}`);
+        if (el) { el.value = e.stats?.[s] ?? 10; updateMod(el); }
+      });
+      const fields = [...card.querySelectorAll('.field-input, .field-textarea')];
+      (e.fields || []).forEach((val, i) => { if (fields[i]) fields[i].value = val; });
+    });
+  });
+
+  // 還原異常狀態
+  (data.conditions || []).forEach(c => {
+    const grid = document.getElementById('cond-grid');
+    grid.appendChild(createCondCard(c.icon, c.name, c.effect));
+  });
+}
+
+function escH(str) {
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── 說明 Modal ──
+function showSyncHelp() {
+  document.getElementById('appsScriptCode').value = APPS_SCRIPT_CODE;
+  document.getElementById('syncModalOverlay').classList.add('show');
+}
+
+function closeSyncModal(e) {
+  if (e.target === document.getElementById('syncModalOverlay')) {
+    document.getElementById('syncModalOverlay').classList.remove('show');
+  }
+}
+
+function copyAppsScript() {
+  navigator.clipboard.writeText(APPS_SCRIPT_CODE).then(() => {
+    alert('已複製！請貼入 Apps Script 編輯器。');
+  });
+}
+
+// 在頁面載入時初始化 URL
+window.addEventListener('load', () => {
+  const savedUrl = localStorage.getItem('dnd_sheet_url');
+  if (savedUrl) document.getElementById('sheetUrlInput').value = savedUrl;
+  document.getElementById('appsScriptCode').value = APPS_SCRIPT_CODE;
+});
+
+
+// 預設範例備忘
+(function() {
+  const grid = document.getElementById('memo-grid');
+  const exCard = document.createElement('div');
+  exCard.className = 'memo-card';
+  exCard.innerHTML = `
+    <div class="memo-card-header">
+      <span class="memo-type-badge badge-note">備忘</span>
+      <input class="memo-title-input" value="歡迎使用 DM Dashboard">
+      <button class="btn-icon" onclick="this.closest('.memo-card').remove()">✕</button>
+    </div>
+    <div class="memo-body">
+      <textarea class="memo-textarea" rows="4">這是你的 D&D 城主面板。
+• 備忘錄：記錄提示，點「🔔 提示玩家」可彈出大型提示框
+• NPC / 怪物：按「＋ 新增」可建立卡片，只填名稱也沒問題
+• 異常狀態：預填 5e 官方狀態，點文字直接編輯</textarea>
+    </div>
+    <div class="memo-footer">
+      <span style="flex:1;color:var(--text-muted);font-size:11px;">點選文字即可編輯</span>
+      <button class="memo-ping-btn" onclick="showAlert('⚔ 冒險開始！','準備好了嗎？玩家已就位，命運的骰子即將落下…')">🔔 提示玩家</button>
+    </div>
+  `;
+  grid.appendChild(exCard);
+})();
+</script>
+</body>
+</html>

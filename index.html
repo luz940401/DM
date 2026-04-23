@@ -373,7 +373,7 @@
 
   .entity-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
     gap: 16px;
   }
 
@@ -554,7 +554,7 @@
   .field-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 12px;
     margin-bottom: 10px;
   }
 
@@ -584,11 +584,11 @@
 
   .field-textarea {
     resize: vertical;
-    min-height: 56px;
-    line-height: 1.5;
+    min-height: 80px;
+    line-height: 1.6;
   }
 
-  .field-textarea.tall { min-height: 80px; }
+  .field-textarea.tall { min-height: 110px; }
 
   .entity-actions {
     display: flex;
@@ -1756,11 +1756,11 @@ function addEntity(type) {
 
         <div>
           <div class="field-label">➕ 附贈動作</div>
-          <textarea class="field-textarea" placeholder="附贈動作…"></textarea>
+          <textarea class="field-textarea tall" placeholder="附贈動作…"></textarea>
         </div>
         <div>
           <div class="field-label">⚡ 反應</div>
-          <textarea class="field-textarea" placeholder="反應技能…"></textarea>
+          <textarea class="field-textarea tall" placeholder="反應技能…"></textarea>
         </div>
 
         <div class="field-full">

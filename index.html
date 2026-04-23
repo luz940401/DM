@@ -509,6 +509,72 @@
     outline: none;
   }
 
+  /* Vital Stats (HP / Shield / Armor) */
+  .vital-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .vital-stat-box {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+    transition: border-color 0.15s;
+  }
+  .vital-stat-box:focus-within { border-color: var(--border-gold); }
+
+  .vital-hp    { border-top: 2px solid var(--red-light); }
+  .vital-shield{ border-top: 2px solid var(--blue-light); }
+  .vital-magic { border-top: 2px solid #c47fff; }
+  .vital-armor { border-top: 2px solid var(--gold); }
+
+  .vital-stat-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    white-space: nowrap;
+  }
+
+  .vital-stat-input {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+    font-family: 'Cinzel', serif;
+  }
+  .vital-stat-input::placeholder { color: var(--text-muted); font-size: 18px; }
+
+  /* Loot Drop Section */
+  .loot-drop-section {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .loot-drop-header {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .loot-drop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
   /* Stats Grid */
   .stats-grid {
     display: grid;
@@ -1695,9 +1761,6 @@ function addEntity(type) {
     </div>
   `).join('');
 
-  const defaultHP = type === 'monster' ? 50 : 30;
-  const defaultMax = defaultHP;
-
   const card = document.createElement('div');
   card.className = `entity-card ${cardClass}`;
   card.id = `entity-${id}`;
@@ -1709,19 +1772,24 @@ function addEntity(type) {
       <span class="entity-toggle" id="toggle-${id}">▼</span>
     </div>
     <div class="entity-body" id="body-${id}">
-      <!-- HP -->
-      <div class="hp-section">
-        <div class="hp-row">
-          <span class="hp-label">HP</span>
-          <button class="hp-adj-btn" onclick="adjHP(${id},-1)">−</button>
-          <input class="hp-delta-input" id="hpdelta-${id}" type="number" value="1" min="1">
-          <button class="hp-adj-btn" onclick="adjHP(${id},1)">＋</button>
-          <input class="hp-input" id="hpcur-${id}" type="number" value="${defaultHP}" oninput="updateHP(${id})">
-          <span style="color:var(--text-muted);font-size:13px;">/</span>
-          <input class="hp-input" id="hpmax-${id}" type="number" value="${defaultMax}" oninput="updateHP(${id})">
-          <div class="hp-bar-wrap" style="min-width:60px">
-            <div class="hp-bar" id="hpbar-${id}" style="width:100%;background:var(--green-light)"></div>
-          </div>
+
+      <!-- 生命值 & 護甲數值列 -->
+      <div class="vital-stats-grid">
+        <div class="vital-stat-box vital-hp">
+          <div class="vital-stat-label">❤️ 生命值 HP</div>
+          <input class="vital-stat-input" type="number" placeholder="0" min="0">
+        </div>
+        <div class="vital-stat-box vital-shield">
+          <div class="vital-stat-label">🔵 護盾值</div>
+          <input class="vital-stat-input" type="number" placeholder="0" min="0">
+        </div>
+        <div class="vital-stat-box vital-magic">
+          <div class="vital-stat-label">✨ 魔法護甲</div>
+          <input class="vital-stat-input" type="number" placeholder="0" min="0">
+        </div>
+        <div class="vital-stat-box vital-armor">
+          <div class="vital-stat-label">🛡 物理護甲</div>
+          <input class="vital-stat-input" type="number" placeholder="0" min="0">
         </div>
       </div>
 
@@ -1731,12 +1799,12 @@ function addEntity(type) {
       <!-- FIELDS -->
       <div class="field-grid">
         <div>
-          <div class="field-label">🛡 護甲值 (AC)</div>
-          <input class="field-input" type="number" placeholder="10" min="1" max="30">
-        </div>
-        <div>
           <div class="field-label">👁 被動感知</div>
           <input class="field-input" type="number" placeholder="10">
+        </div>
+        <div>
+          <div class="field-label">⚡ 先攻加值</div>
+          <input class="field-input" type="number" placeholder="0">
         </div>
 
         <div class="field-full">
@@ -1771,6 +1839,25 @@ function addEntity(type) {
         <div class="field-full">
           <div class="field-label">📖 簡介 / 背景</div>
           <textarea class="field-textarea tall" placeholder="角色背景、個性、動機、與玩家的關係…"></textarea>
+        </div>
+      </div>
+
+      <!-- 掉落物 -->
+      <div class="loot-drop-section">
+        <div class="loot-drop-header">💰 掉落物</div>
+        <div class="loot-drop-grid">
+          <div class="vital-stat-box">
+            <div class="vital-stat-label">🪙 金幣 (GP)</div>
+            <input class="vital-stat-input" type="text" placeholder="0">
+          </div>
+          <div class="vital-stat-box">
+            <div class="vital-stat-label">⭐ 經驗值 (EXP)</div>
+            <input class="vital-stat-input" type="text" placeholder="0">
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="field-label">📦 掉落物品</div>
+          <textarea class="field-textarea tall" placeholder="例：魔法短劍（+1）、治療藥水 ×2、古代羊皮紙…"></textarea>
         </div>
       </div>
 

@@ -1777,11 +1777,11 @@ function addEntity(type) {
       <div class="vital-stats-grid">
         <div class="vital-stat-box vital-hp">
           <div class="vital-stat-label">❤️ 生命值 HP</div>
-          <input class="vital-stat-input" type="number" placeholder="0" min="0">
+          <input class="vital-stat-input" type="number" placeholder="0" min="0" id="hpcur-${id}" oninput="updateHP(${id})">
         </div>
         <div class="vital-stat-box vital-shield">
           <div class="vital-stat-label">🔵 護盾值</div>
-          <input class="vital-stat-input" type="number" placeholder="0" min="0">
+          <input class="vital-stat-input" type="number" placeholder="0" min="0" id="hpmax-${id}" oninput="updateHP(${id})">
         </div>
         <div class="vital-stat-box vital-magic">
           <div class="vital-stat-label">✨ 魔法護甲</div>

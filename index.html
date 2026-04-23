@@ -1793,6 +1793,19 @@ function addEntity(type) {
         </div>
       </div>
 
+      <!-- HP BAR -->
+      <div class="hp-section">
+        <div class="hp-row">
+          <span class="hp-label">HP</span>
+          <div class="hp-bar-wrap">
+            <div class="hp-bar" id="hpbar-${id}" style="width:100%;background:var(--green-light)"></div>
+          </div>
+          <button class="hp-adj-btn" onclick="adjHP(${id},-1)">−</button>
+          <input class="hp-delta-input" type="number" id="hpdelta-${id}" value="1" min="1">
+          <button class="hp-adj-btn" onclick="adjHP(${id},1)">＋</button>
+        </div>
+      </div>
+
       <!-- STATS -->
       <div class="stats-grid">${statBoxes}</div>
 

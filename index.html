@@ -857,6 +857,430 @@
   }
   .search-input:focus { border-color: var(--border-gold); }
   .search-input::placeholder { color: var(--text-muted); }
+
+  /* ══════════════════════════════════════
+     LOOT GENERATOR
+  ══════════════════════════════════════ */
+
+  /* 來源類型選擇 */
+  .loot-source-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .loot-src-btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .loot-src-btn:hover { border-color: var(--border-gold); color: var(--gold); }
+  .loot-src-btn.active {
+    border-color: var(--gold);
+    color: var(--gold-light);
+    background: rgba(201,146,58,0.12);
+  }
+
+  /* 主要抽取區 */
+  .loot-roll-area {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .loot-roll-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,146,58,0.06), transparent 70%);
+    pointer-events: none;
+  }
+  .loot-roll-title {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .loot-big-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 40px;
+    border-radius: 6px;
+    border: 2px solid var(--border-gold);
+    background: linear-gradient(135deg, #2a1d06, #3d2a0a);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .loot-big-btn:hover {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, #3d2a0a, #5a3d12);
+    box-shadow: 0 6px 30px rgba(201,146,58,0.3);
+    transform: translateY(-1px);
+  }
+  .loot-big-btn:active { transform: scale(0.97); }
+
+  /* 結果卡 */
+  .loot-result-card {
+    background: var(--bg-card2);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .loot-result-card.show { display: block; }
+
+  .loot-result-header {
+    padding: 12px 18px;
+    background: linear-gradient(135deg, var(--bg-card2), var(--bg-panel));
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .loot-result-who {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+  }
+  .loot-rarity-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 3px 12px;
+    border-radius: 10px;
+    text-transform: uppercase;
+  }
+  .rarity-common   { background: rgba(200,200,200,0.1); border: 1px solid #666; color: #d0d0d0; }
+  .rarity-uncommon { background: rgba(40,180,80,0.15);  border: 1px solid #2a8a45; color: #4cdb6e; }
+  .rarity-rare     { background: rgba(40,120,220,0.2);  border: 1px solid #2a5aaa; color: #5aadff; }
+  .rarity-epic     { background: rgba(140,60,220,0.2);  border: 1px solid #7a3aaa; color: #c47fff; }
+  .rarity-legendary {
+    background: rgba(180,30,30,0.25);
+    border: 1px solid #aa2222;
+    color: #ff5555;
+    animation: legGlow 1.2s alternate infinite;
+  }
+  @keyframes legGlow { from { box-shadow: 0 0 4px rgba(200,40,40,0.3); } to { box-shadow: 0 0 16px rgba(200,40,40,0.9); } }
+
+  .loot-items-list {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .loot-item-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.15s;
+  }
+  .loot-item-row:hover { border-color: var(--border-gold); }
+  .loot-item-icon { font-size: 20px; flex-shrink: 0; width: 28px; text-align: center; }
+  .loot-item-name { flex: 1; font-size: 14px; color: var(--text-main); }
+  .loot-item-qty  {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gold-light);
+    white-space: nowrap;
+  }
+  .loot-item-cat  { font-size: 10px; color: var(--text-muted); font-family: 'Cinzel', serif; letter-spacing: 1px; }
+  .loot-empty-msg { text-align: center; color: var(--text-muted); font-size: 14px; padding: 20px 0; font-family: 'Crimson Text', serif; }
+
+  /* 掉落資料庫 */
+  .loot-panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 700px) { .loot-panel-grid { grid-template-columns: 1fr; } }
+
+  .loot-panel-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .loot-panel-head {
+    padding: 10px 16px;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .loot-panel-body { padding: 14px; }
+
+  /* 輸入群 */
+  .loot-field {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-size: 13px;
+    padding: 7px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+    font-family: 'Noto Sans TC', sans-serif;
+    margin-bottom: 8px;
+  }
+  .loot-field:focus { border-color: var(--border-gold); }
+  .loot-field::placeholder { color: var(--text-muted); }
+  .loot-field-row { display: flex; gap: 8px; }
+  .loot-field-row .loot-field { margin-bottom: 0; }
+  .loot-field-sm { max-width: 80px; text-align: center; }
+  select.loot-field {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a6a2e'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+    background-color: var(--bg-card2);
+  }
+  .loot-field-label { font-size: 11px; color: var(--text-muted); font-family: 'Cinzel', serif; letter-spacing: 1px; margin-bottom: 4px; }
+
+  /* DB 列表 */
+  .loot-db-list {
+    max-height: 340px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .loot-db-list::-webkit-scrollbar { width: 4px; }
+  .loot-db-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .loot-db-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-size: 12px;
+    transition: border-color 0.15s;
+  }
+  .loot-db-entry:hover { border-color: var(--border-gold); }
+  .loot-db-entry-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+  .loot-db-entry-name { flex: 1; color: var(--text-main); font-weight: 600; }
+  .loot-db-entry-detail { color: var(--text-muted); white-space: nowrap; }
+  .loot-db-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+  .loot-db-del {
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid #6b2020;
+    background: rgba(192,57,43,0.15);
+    color: #e88;
+    font-size: 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: 'Cinzel', serif;
+    transition: all 0.15s;
+  }
+  .loot-db-del:hover { background: rgba(192,57,43,0.35); }
+  .loot-db-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px 0; font-family: 'Crimson Text', serif; font-style: italic; }
+
+  /* 歷史紀錄 */
+  .loot-history-list { display: flex; flex-direction: column; gap: 8px; }
+  .loot-hist-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  .loot-hist-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .loot-hist-who { font-family: 'Cinzel', serif; color: var(--gold); font-size: 12px; letter-spacing: 1px; flex: 1; }
+  .loot-hist-time { color: var(--text-muted); font-size: 11px; }
+  .loot-hist-items { color: var(--text-dim); line-height: 1.7; }
+
+  /* 設定面板 */
+  .loot-settings-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  .loot-settings-box > div { flex: 1; min-width: 130px; }
+
+  /* 子頁籤 */
+  .loot-sub-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+    gap: 0;
+  }
+  .loot-sub-tab {
+    padding: 9px 20px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: none;
+    color: var(--text-muted);
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .loot-sub-tab:hover { color: var(--gold); }
+  .loot-sub-tab.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+  .loot-sub-panel { display: none; }
+  .loot-sub-panel.active { display: block; }
+
+  /* 來源標籤 chip */
+  .loot-src-chip {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    background: rgba(201,146,58,0.1);
+    border: 1px solid var(--border-gold);
+    color: var(--gold);
+  }
+  /* 機率設定 */
+  .loot-rates-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .loot-rate-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.15s;
+  }
+  .loot-rate-row:hover { border-color: var(--border-gold); }
+  .loot-rate-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .loot-rate-label {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .loot-rate-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--bg-card2);
+    outline: none;
+    cursor: pointer;
+  }
+  .loot-rate-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border-gold);
+    background: var(--bg-card2);
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .loot-rate-slider::-webkit-slider-thumb:hover { border-color: var(--gold); }
+  .loot-rate-num {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 8px;
+    width: 60px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .loot-rate-num:focus { border-color: var(--border-gold); }
+  .loot-preview-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .loot-preview-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-card2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .loot-preview-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  .loot-preview-pct {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    width: 52px;
+    text-align: right;
+    flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
@@ -872,7 +1296,8 @@
 
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('memo')"><span class="tab-icon">📜</span>備忘錄</button>
+  <button class="tab-btn" onclick="switchTab('memo')"><span class="tab-icon">📜</span>備忘錄</button>
+  <button class="tab-btn active" onclick="switchTab('loot')"><span class="tab-icon">🎲</span>戰利品</button>
   <button class="tab-btn" onclick="switchTab('ally')"><span class="tab-icon">🛡</span>友軍 NPC</button>
   <button class="tab-btn" onclick="switchTab('enemy')"><span class="tab-icon">⚔</span>敵軍 NPC</button>
   <button class="tab-btn" onclick="switchTab('monster')"><span class="tab-icon">💀</span>怪物</button>
@@ -880,7 +1305,7 @@
 </div>
 
 <!-- ════════════════════════════════════════ MEMO PAGE -->
-<div class="page active" id="page-memo">
+<div class="page" id="page-memo">
   <div class="section-header">
     <span class="section-title">📜 備忘錄 / 事件提示</span>
     <div class="section-line"></div>
@@ -894,6 +1319,181 @@
 
   <div class="memo-grid" id="memo-grid">
     <!-- 預設範例 -->
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ LOOT PAGE -->
+<div class="page active" id="page-loot">
+  <div class="section-header">
+    <span class="section-title">🎲 戰利品生成器</span>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- 子頁籤 -->
+  <div class="loot-sub-tabs">
+    <button class="loot-sub-tab active" onclick="switchLootSub('roll')">⚄ 抽取戰利品</button>
+    <button class="loot-sub-tab" onclick="switchLootSub('db')">📦 掉落資料庫</button>
+    <button class="loot-sub-tab" onclick="switchLootSub('rates')">⚖ 機率設定</button>
+    <button class="loot-sub-tab" onclick="switchLootSub('history')">📜 歷史紀錄</button>
+  </div>
+
+  <!-- ── 抽取頁 ── -->
+  <div class="loot-sub-panel active" id="loot-panel-roll">
+
+    <!-- 來源選擇 -->
+    <div style="margin-bottom:14px">
+      <div class="loot-field-label" style="margin-bottom:8px">選擇來源類型（篩選掉落池）</div>
+      <div class="loot-source-tabs" id="lootSourceTabs">
+        <button class="loot-src-btn active" data-src="all" onclick="setLootSource(this)">✦ 全部</button>
+      </div>
+    </div>
+
+    <!-- 設定 -->
+    <div class="loot-settings-box">
+      <div>
+        <div class="loot-field-label">玩家 / 角色</div>
+        <input class="loot-field" id="lootPlayerName" placeholder="玩家名稱（選填）" style="margin-bottom:0">
+      </div>
+      <div>
+        <div class="loot-field-label">最少抽幾項</div>
+        <input class="loot-field loot-field-sm" id="lootMinItems" type="number" value="1" min="1" max="20" style="margin-bottom:0">
+      </div>
+      <div>
+        <div class="loot-field-label">最多抽幾項</div>
+        <input class="loot-field loot-field-sm" id="lootMaxItems" type="number" value="3" min="1" max="20" style="margin-bottom:0">
+      </div>
+      <div>
+        <div class="loot-field-label">保證最低稀有度</div>
+        <select class="loot-field" id="lootMinRarity" style="margin-bottom:0">
+          <option value="0">（不限）</option>
+          <option value="1">⬜ 普通以上</option>
+          <option value="2">🟩 魔法以上</option>
+          <option value="3">🟦 稀有以上</option>
+          <option value="4">🟪 獨特以上</option>
+          <option value="5">🟥 傳說</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 大按鈕 -->
+    <div class="loot-roll-area">
+      <div class="loot-roll-title">準備好了嗎？</div>
+      <button class="loot-big-btn" onclick="rollLoot()">
+        ⚄ &nbsp;開啟寶箱 / 探索事件
+      </button>
+    </div>
+
+    <!-- 結果 -->
+    <div class="loot-result-card" id="lootResultCard">
+      <div class="loot-result-header">
+        <div class="loot-result-who" id="lootResultWho">🎯 玩家的收穫</div>
+        <div class="loot-rarity-badge rarity-common" id="lootResultRarity">COMMON</div>
+      </div>
+      <div class="loot-items-list" id="lootItemsList"></div>
+    </div>
+
+  </div>
+
+  <!-- ── 資料庫頁 ── -->
+  <div class="loot-sub-panel" id="loot-panel-db">
+    <div class="loot-panel-grid">
+
+      <!-- 左：新增表單 -->
+      <div class="loot-panel-box">
+        <div class="loot-panel-head">
+          ＋ 新增掉落物
+        </div>
+        <div class="loot-panel-body">
+          <div class="loot-field-label">圖示 & 名稱</div>
+          <div class="loot-field-row" style="margin-bottom:8px">
+            <input class="loot-field" id="dbIcon" placeholder="🗡" style="max-width:56px;text-align:center;margin-bottom:0;font-size:18px">
+            <input class="loot-field" id="dbName" placeholder="物品名稱（例：回血藥水）" style="margin-bottom:0">
+          </div>
+
+          <div class="loot-field-label">來源類型標籤</div>
+          <input class="loot-field" id="dbSource" placeholder="例：寶箱、野外事件、商人、BOSS…">
+
+          <div class="loot-field-label">稀有度</div>
+          <select class="loot-field" id="dbRarity">
+            <option value="common">⬜ 白色・普通</option>
+            <option value="uncommon">🟩 綠色・魔法</option>
+            <option value="rare">🟦 藍色・稀有</option>
+            <option value="epic">🟪 紫色・獨特</option>
+            <option value="legendary">🟥 紅色・傳說</option>
+          </select>
+
+          <div class="loot-field-label">數量範圍 & 出現權重</div>
+          <div class="loot-field-row" style="margin-bottom:8px">
+            <div style="flex:1">
+              <div class="loot-field-label" style="font-size:10px">最少數量</div>
+              <input class="loot-field" id="dbMinQty" type="number" value="1" min="1" style="margin-bottom:0">
+            </div>
+            <div style="flex:1">
+              <div class="loot-field-label" style="font-size:10px">最多數量</div>
+              <input class="loot-field" id="dbMaxQty" type="number" value="1" min="1" style="margin-bottom:0">
+            </div>
+            <div style="flex:1">
+              <div class="loot-field-label" style="font-size:10px">權重（越高越常）</div>
+              <input class="loot-field" id="dbWeight" type="number" value="10" min="1" style="margin-bottom:0">
+            </div>
+          </div>
+
+          <div class="loot-field-label">備註（選填）</div>
+          <input class="loot-field" id="dbNote" placeholder="例：+1 武器、只限地下城區域…">
+
+          <button class="btn btn-gold" style="width:100%;margin-top:4px" onclick="addLootEntry()">＋ 新增至資料庫</button>
+        </div>
+      </div>
+
+      <!-- 右：現有列表 -->
+      <div class="loot-panel-box">
+        <div class="loot-panel-head">
+          <span>📦 掉落資料庫 <span id="lootDBCount" style="color:var(--text-dim);font-size:11px">（0 項）</span></span>
+          <input class="search-input" type="text" placeholder="🔍 搜尋…" oninput="filterLootDB(this.value)" style="width:120px;font-size:11px;padding:4px 8px">
+        </div>
+        <div class="loot-panel-body" style="padding:10px">
+          <div class="loot-db-list" id="lootDBList">
+            <div class="loot-db-empty">尚無任何掉落物<br>請在左側新增</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 機率設定頁 ── -->
+  <div class="loot-sub-panel" id="loot-panel-rates">
+    <div style="max-width:560px">
+      <p style="color:var(--text-dim);font-size:13px;font-family:'Crimson Text',serif;margin-bottom:20px;line-height:1.7;">
+        設定每次抽取時，各稀有度的<strong style="color:var(--gold)">出現機率</strong>。系統會先依此機率決定「本次物品的稀有度等級」，再從該等級的掉落池中隨機抽取。五個數字加總不需要等於 100，系統會自動換算比例。
+      </p>
+
+      <div class="loot-rates-grid" id="lootRatesGrid">
+        <!-- JS 動態生成 -->
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="saveRates()">💾 套用設定</button>
+        <button class="btn btn-sm" style="border-color:var(--border);color:var(--text-dim);background:var(--bg-card2)" onclick="resetRates()">↺ 恢復預設</button>
+      </div>
+
+      <div id="ratesSavedMsg" style="display:none;margin-top:12px;color:#4cdb6e;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1px">✓ 已套用！</div>
+
+      <div style="margin-top:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:14px">
+        <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:10px">📊 目前換算後的實際機率</div>
+        <div id="ratesPreview" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 歷史紀錄頁 ── -->
+  <div class="loot-sub-panel" id="loot-panel-history">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <span style="color:var(--text-dim);font-family:'Cinzel',serif;font-size:12px;letter-spacing:1px">最近 50 筆抽取紀錄</span>
+      <button class="btn btn-red btn-sm" onclick="clearLootHistory()">🗑 清除紀錄</button>
+    </div>
+    <div class="loot-history-list" id="lootHistoryList">
+      <div class="loot-empty-msg">尚無紀錄</div>
+    </div>
   </div>
 </div>
 
@@ -1004,6 +1604,7 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + tab).classList.add('active');
   event.currentTarget.classList.add('active');
+  if (tab === 'loot') renderLootDB();
 }
 
 // ════════════════════════════════════════
@@ -1633,6 +2234,444 @@ window.addEventListener('load', () => {
 });
 
 
+// ════════════════════════════════════════
+// LOOT GENERATOR
+// ════════════════════════════════════════
+
+const LOOT_DB_KEY   = 'dnd_loot_db_v1';
+const LOOT_HIST_KEY = 'dnd_loot_hist_v1';
+
+const RARITY_META = {
+  common:    { label: '普通',  labelEn: 'NORMAL',    rank: 1, badgeCls: 'rarity-common',    color: '#d0d0d0', dot: '⬜' },
+  uncommon:  { label: '魔法',  labelEn: 'MAGIC',     rank: 2, badgeCls: 'rarity-uncommon',  color: '#4cdb6e', dot: '🟩' },
+  rare:      { label: '稀有',  labelEn: 'RARE',      rank: 3, badgeCls: 'rarity-rare',      color: '#5aadff', dot: '🟦' },
+  epic:      { label: '獨特',  labelEn: 'UNIQUE',    rank: 4, badgeCls: 'rarity-epic',      color: '#c47fff', dot: '🟪' },
+  legendary: { label: '傳說',  labelEn: 'LEGENDARY', rank: 5, badgeCls: 'rarity-legendary', color: '#ff5555', dot: '🟥' },
+};
+
+let _lootDB      = [];   // 掉落資料庫
+let _lootHistory = [];   // 歷史紀錄
+let _lootSource  = 'all'; // 當前來源篩選
+
+// ── 讀取 / 儲存 ──────────────────────────────
+function loadLootDB() {
+  try { _lootDB = JSON.parse(localStorage.getItem(LOOT_DB_KEY) || '[]'); } catch(e) { _lootDB = []; }
+  try { _lootHistory = JSON.parse(localStorage.getItem(LOOT_HIST_KEY) || '[]'); } catch(e) { _lootHistory = []; }
+  if (!_lootDB.length) { _lootDB = defaultLootDB(); saveLootDB(); }
+  loadRates();
+  rebuildSourceTabs();
+  renderLootDB();
+  renderLootHistory();
+}
+
+function saveLootDB() {
+  localStorage.setItem(LOOT_DB_KEY, JSON.stringify(_lootDB));
+  localStorage.setItem(LOOT_HIST_KEY, JSON.stringify(_lootHistory.slice(0, 50)));
+}
+
+function defaultLootDB() {
+  return [
+    { id: uid(), icon:'💰', name:'金幣',       source:'寶箱',   rarity:'common',   minQty:10,  maxQty:100, weight:30, note:'' },
+    { id: uid(), icon:'🧪', name:'回血藥水',   source:'寶箱',   rarity:'uncommon', minQty:1,   maxQty:3,   weight:20, note:'恢復 2d4+2 HP' },
+    { id: uid(), icon:'🧿', name:'魔力藥水',   source:'寶箱',   rarity:'uncommon', minQty:1,   maxQty:2,   weight:15, note:'恢復 1 法術位' },
+    { id: uid(), icon:'📜', name:'火球卷軸',   source:'寶箱',   rarity:'rare',     minQty:1,   maxQty:1,   weight:8,  note:'DC13，8d6 火焰' },
+    { id: uid(), icon:'📜', name:'傳送卷軸',   source:'寶箱',   rarity:'rare',     minQty:1,   maxQty:1,   weight:6,  note:'' },
+    { id: uid(), icon:'💎', name:'藍晶石',     source:'野外事件', rarity:'rare',   minQty:1,   maxQty:3,   weight:10, note:'' },
+    { id: uid(), icon:'🗡', name:'精良短劍',   source:'BOSS',   rarity:'rare',     minQty:1,   maxQty:1,   weight:5,  note:'+1 魔法武器' },
+    { id: uid(), icon:'🛡', name:'護盾 +1',    source:'BOSS',   rarity:'epic',     minQty:1,   maxQty:1,   weight:3,  note:'' },
+    { id: uid(), icon:'💰', name:'大量金幣',   source:'野外事件', rarity:'common', minQty:5,   maxQty:50,  weight:25, note:'' },
+    { id: uid(), icon:'⚗', name:'毒藥瓶',     source:'野外事件', rarity:'uncommon',minQty:1,  maxQty:2,   weight:10, note:'DC14 體質豁免' },
+    { id: uid(), icon:'🌿', name:'藥草束',     source:'野外事件', rarity:'common', minQty:1,   maxQty:4,   weight:20, note:'' },
+    { id: uid(), icon:'🏺', name:'古代神器',   source:'BOSS',   rarity:'legendary',minQty:1,  maxQty:1,   weight:1,  note:'待 GM 決定效果' },
+  ];
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+// ── 來源篩選 ──────────────────────────────────
+function rebuildSourceTabs() {
+  const sources = ['all', ...[...new Set(_lootDB.map(e => e.source).filter(Boolean))]];
+  const container = document.getElementById('lootSourceTabs');
+  if (!container) return;
+  container.innerHTML = '';
+  sources.forEach(src => {
+    const btn = document.createElement('button');
+    btn.className = 'loot-src-btn' + (src === _lootSource ? ' active' : '');
+    btn.dataset.src = src;
+    btn.textContent = src === 'all' ? '✦ 全部' : src;
+    btn.onclick = () => setLootSource(btn);
+    container.appendChild(btn);
+  });
+}
+
+function setLootSource(btn) {
+  _lootSource = btn.dataset.src;
+  document.querySelectorAll('.loot-src-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ════════════════════════════════════════
+// RARITY RATES SYSTEM
+// ════════════════════════════════════════
+const LOOT_RATES_KEY = 'dnd_loot_rates_v1';
+const DEFAULT_RATES = { common: 60, uncommon: 25, rare: 10, epic: 4, legendary: 1 };
+let _lootRates = { ...DEFAULT_RATES };
+
+function loadRates() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LOOT_RATES_KEY) || 'null');
+    if (saved) _lootRates = saved;
+  } catch(e) {}
+}
+
+function saveRates() {
+  // 讀取目前輸入值
+  Object.keys(_lootRates).forEach(key => {
+    const el = document.getElementById('rate-input-' + key);
+    if (el) _lootRates[key] = Math.max(0, parseFloat(el.value) || 0);
+  });
+  localStorage.setItem(LOOT_RATES_KEY, JSON.stringify(_lootRates));
+  renderRatesPreview();
+  const msg = document.getElementById('ratesSavedMsg');
+  msg.style.display = 'block';
+  setTimeout(() => { msg.style.display = 'none'; }, 2000);
+}
+
+function resetRates() {
+  _lootRates = { ...DEFAULT_RATES };
+  localStorage.setItem(LOOT_RATES_KEY, JSON.stringify(_lootRates));
+  renderRatesPanel();
+}
+
+function renderRatesPanel() {
+  loadRates();
+  const grid = document.getElementById('lootRatesGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const order = ['common','uncommon','rare','epic','legendary'];
+  order.forEach(key => {
+    const rm = RARITY_META[key];
+    const val = _lootRates[key] ?? 0;
+    const row = document.createElement('div');
+    row.className = 'loot-rate-row';
+    row.innerHTML = `
+      <div class="loot-rate-dot" style="background:${rm.color};box-shadow:0 0 6px ${rm.color}44"></div>
+      <div class="loot-rate-label" style="color:${rm.color}">${rm.label}</div>
+      <input class="loot-rate-slider" type="range" id="rate-slider-${key}" min="0" max="100" step="0.5" value="${val}"
+        oninput="syncRate('${key}', this.value)"
+        style="--thumb-color:${rm.color}">
+      <input class="loot-rate-num" type="number" id="rate-input-${key}" min="0" max="999" step="0.5" value="${val}"
+        oninput="syncRate('${key}', this.value)">
+      <span style="font-size:11px;color:var(--text-muted);font-family:'Cinzel',serif">點數</span>
+    `;
+    grid.appendChild(row);
+  });
+  renderRatesPreview();
+}
+
+function syncRate(key, val) {
+  const v = Math.max(0, parseFloat(val) || 0);
+  const slider = document.getElementById('rate-slider-' + key);
+  const input  = document.getElementById('rate-input-' + key);
+  if (slider) slider.value = Math.min(v, 100);
+  if (input)  input.value  = v;
+  _lootRates[key] = v;
+  renderRatesPreview();
+}
+
+function renderRatesPreview() {
+  const preview = document.getElementById('ratesPreview');
+  if (!preview) return;
+  const order = ['common','uncommon','rare','epic','legendary'];
+  const total = order.reduce((s, k) => s + (_lootRates[k] || 0), 0);
+  preview.innerHTML = '';
+  order.forEach(key => {
+    const rm  = RARITY_META[key];
+    const pts = _lootRates[key] || 0;
+    const pct = total > 0 ? (pts / total * 100) : 0;
+    const row = document.createElement('div');
+    row.className = 'loot-preview-bar-wrap';
+    row.innerHTML = `
+      <span style="font-family:'Cinzel',serif;font-size:11px;color:${rm.color};width:48px;flex-shrink:0">${rm.label}</span>
+      <div class="loot-preview-track">
+        <div class="loot-preview-fill" style="width:${pct.toFixed(1)}%;background:${rm.color}"></div>
+      </div>
+      <span class="loot-preview-pct" style="color:${rm.color}">${pct.toFixed(1)}%</span>
+    `;
+    preview.appendChild(row);
+  });
+}
+
+// ── 依機率抽出一個稀有度 ──────────────────────
+function pickRarity(pool) {
+  // 先看 pool 裡有哪些稀有度
+  const available = [...new Set(pool.map(e => e.rarity))];
+  const order = ['common','uncommon','rare','epic','legendary'];
+  const weights = {};
+  let total = 0;
+  order.forEach(key => {
+    if (available.includes(key)) {
+      weights[key] = _lootRates[key] || 0;
+      total += weights[key];
+    }
+  });
+  if (total === 0) return available[Math.floor(Math.random() * available.length)];
+  let pick = Math.random() * total;
+  for (const key of order) {
+    if (weights[key] == null) continue;
+    pick -= weights[key];
+    if (pick <= 0) return key;
+  }
+  return available[available.length - 1];
+}
+
+// ════════════════════════════════════════
+// 抽取邏輯（使用稀有度機率）
+// ════════════════════════════════════════
+function rollLoot() {
+  // 過濾掉落池
+  let pool = _lootSource === 'all'
+    ? [..._lootDB]
+    : _lootDB.filter(e => e.source === _lootSource);
+
+  // 保證最低稀有度
+  const minRank = parseInt(document.getElementById('lootMinRarity').value) || 0;
+  if (minRank > 0) {
+    const filtered = pool.filter(e => (RARITY_META[e.rarity]?.rank || 1) >= minRank);
+    if (filtered.length) pool = filtered;
+  }
+
+  if (!pool.length) {
+    alert('⚠ 目前篩選條件下沒有任何掉落物！請先到「資料庫」頁新增，或放寬篩選條件。');
+    return;
+  }
+
+  const minItems = Math.max(1, parseInt(document.getElementById('lootMinItems').value) || 1);
+  const maxItems = Math.max(minItems, parseInt(document.getElementById('lootMaxItems').value) || 3);
+  const numItems = randBetween(minItems, maxItems);
+
+  const rolled = [];
+
+  for (let i = 0; i < numItems; i++) {
+    // 1. 依機率設定決定本次物品稀有度
+    const targetRarity = pickRarity(pool);
+    // 2. 從該稀有度的物品池中依個別權重抽取
+    const subPool = pool.filter(e => e.rarity === targetRarity);
+    const fallback = subPool.length ? subPool : pool;
+    const totalW = fallback.reduce((s, e) => s + (e.weight || 1), 0);
+    let pick = Math.random() * totalW;
+    let chosen = fallback[fallback.length - 1];
+    for (const entry of fallback) {
+      pick -= (entry.weight || 1);
+      if (pick <= 0) { chosen = entry; break; }
+    }
+    const qty = randBetween(chosen.minQty || 1, chosen.maxQty || 1);
+    const existing = rolled.find(r => r.id === chosen.id);
+    if (existing) existing.qty += qty;
+    else rolled.push({ ...chosen, qty });
+  }
+
+  // 整體稀有度 = 最高稀有度
+  const topRarity = rolled.reduce((best, item) => {
+    const rank = RARITY_META[item.rarity]?.rank || 1;
+    return rank > (RARITY_META[best]?.rank || 1) ? item.rarity : best;
+  }, 'common');
+
+  // 玩家名稱
+  const playerName = document.getElementById('lootPlayerName').value.trim() || '冒險者';
+
+  // 顯示結果
+  const card = document.getElementById('lootResultCard');
+  card.className = 'loot-result-card show';
+
+  const sourceLabel = _lootSource === 'all' ? '' : ` ・ ${_lootSource}`;
+  document.getElementById('lootResultWho').textContent = `🎯 ${playerName} 的收穫${sourceLabel}`;
+
+  const rm = RARITY_META[topRarity];
+  const rarityEl = document.getElementById('lootResultRarity');
+  rarityEl.className = 'loot-rarity-badge ' + rm.badgeCls;
+  rarityEl.textContent = rm.label;
+
+  const list = document.getElementById('lootItemsList');
+  list.innerHTML = '';
+  if (!rolled.length) {
+    list.innerHTML = '<div class="loot-empty-msg">空空如也，什麼都沒有…</div>';
+  } else {
+    rolled.forEach(item => {
+      const rm2 = RARITY_META[item.rarity] || RARITY_META.common;
+      const row = document.createElement('div');
+      row.className = 'loot-item-row';
+      row.style.borderLeftColor = rm2.color;
+      row.style.borderLeftWidth = '3px';
+      row.innerHTML = `
+        <div class="loot-item-icon">${item.icon || '📦'}</div>
+        <div style="flex:1">
+          <div class="loot-item-name">${escH(item.name)}</div>
+          ${item.note ? `<div class="loot-item-cat">${escH(item.note)}</div>` : ''}
+        </div>
+        <div style="text-align:right">
+          <div class="loot-item-qty">× ${item.qty.toLocaleString()}</div>
+          <div class="loot-item-cat" style="color:${rm2.color}">${rm2.dot} ${rm2.label}</div>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  // 加入歷史
+  _lootHistory.unshift({
+    ts: new Date().toLocaleString('zh-TW', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' }),
+    player: playerName,
+    source: _lootSource,
+    rarity: topRarity,
+    items: rolled.map(i => `${i.icon||''}${i.name}×${i.qty}`)
+  });
+  saveLootDB();
+  renderLootHistory();
+
+  // 捲動到結果
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function randBetween(a, b) {
+  return Math.floor(Math.random() * (b - a + 1)) + a;
+}
+
+// ── 新增掉落物 ────────────────────────────────
+function addLootEntry() {
+  const icon   = document.getElementById('dbIcon').value.trim() || '📦';
+  const name   = document.getElementById('dbName').value.trim();
+  const source = document.getElementById('dbSource').value.trim() || '一般';
+  const rarity = document.getElementById('dbRarity').value;
+  const minQty = parseInt(document.getElementById('dbMinQty').value) || 1;
+  const maxQty = parseInt(document.getElementById('dbMaxQty').value) || 1;
+  const weight = parseInt(document.getElementById('dbWeight').value) || 10;
+  const note   = document.getElementById('dbNote').value.trim();
+
+  if (!name) { alert('請輸入物品名稱！'); return; }
+
+  _lootDB.push({
+    id: uid(), icon, name, source, rarity,
+    minQty: Math.min(minQty, maxQty),
+    maxQty: Math.max(minQty, maxQty),
+    weight, note
+  });
+  saveLootDB();
+  renderLootDB();
+  rebuildSourceTabs();
+
+  // 清空
+  ['dbIcon','dbName','dbNote'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('dbMinQty').value = '1';
+  document.getElementById('dbMaxQty').value = '1';
+  document.getElementById('dbWeight').value = '10';
+  document.getElementById('dbRarity').value = 'common';
+}
+
+// ── 渲染資料庫 ────────────────────────────────
+function renderLootDB(filter = '') {
+  const list = document.getElementById('lootDBList');
+  const countEl = document.getElementById('lootDBCount');
+  if (!list) return;
+
+  const q = filter.toLowerCase();
+  const visible = _lootDB.filter(e =>
+    !q || e.name.toLowerCase().includes(q) || (e.source||'').toLowerCase().includes(q)
+  );
+
+  if (countEl) countEl.textContent = `（${_lootDB.length} 項）`;
+  list.innerHTML = '';
+
+  if (!visible.length) {
+    list.innerHTML = `<div class="loot-db-empty">${_lootDB.length ? '找不到符合結果' : '尚無任何掉落物<br>請在左側新增'}</div>`;
+    return;
+  }
+
+  visible.forEach(entry => {
+    const rm = RARITY_META[entry.rarity] || RARITY_META.common;
+    const row = document.createElement('div');
+    row.className = 'loot-db-entry';
+    row.innerHTML = `
+      <div class="loot-db-entry-icon">${entry.icon || '📦'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span class="loot-db-entry-name">${escH(entry.name)}</span>
+      <span class="loot-db-badge" style="background:rgba(0,0,0,0.3);border:1px solid ${rm.color};color:${rm.color}">${rm.dot} ${rm.label}</span>
+          ${entry.source ? `<span class="loot-src-chip">${escH(entry.source)}</span>` : ''}
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">
+          ×${entry.minQty}~${entry.maxQty} &nbsp;・&nbsp; 權重 ${entry.weight}
+          ${entry.note ? ' &nbsp;・&nbsp; ' + escH(entry.note) : ''}
+        </div>
+      </div>
+      <button class="loot-db-del" onclick="deleteLootEntry('${entry.id}')">✕</button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function filterLootDB(val) { renderLootDB(val); }
+
+function deleteLootEntry(id) {
+  _lootDB = _lootDB.filter(e => e.id !== id);
+  saveLootDB();
+  renderLootDB();
+  rebuildSourceTabs();
+}
+
+// ── 歷史紀錄 ──────────────────────────────────
+function renderLootHistory() {
+  const list = document.getElementById('lootHistoryList');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (!_lootHistory.length) {
+    list.innerHTML = '<div class="loot-empty-msg">尚無任何抽取紀錄</div>';
+    return;
+  }
+
+  _lootHistory.slice(0, 50).forEach(h => {
+    const rm = RARITY_META[h.rarity] || RARITY_META.common;
+    const card = document.createElement('div');
+    card.className = 'loot-hist-card';
+    card.innerHTML = `
+      <div class="loot-hist-top">
+        <span class="loot-hist-who">🎯 ${escH(h.player)}</span>
+        ${h.source && h.source !== 'all' ? `<span class="loot-src-chip">${escH(h.source)}</span>` : ''}
+        <span class="loot-rarity-badge ${rm.badgeCls}" style="font-size:9px;padding:2px 8px">${rm.label}</span>
+        <span class="loot-hist-time">${h.ts}</span>
+      </div>
+      <div class="loot-hist-items">${h.items.map(i => escH(i)).join(' ・ ')}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function clearLootHistory() {
+  if (!confirm('確定要清除所有歷史紀錄？')) return;
+  _lootHistory = [];
+  saveLootDB();
+  renderLootHistory();
+}
+
+// ── 子頁籤切換 ────────────────────────────────
+function switchLootSub(name) {
+  const tabs = ['roll','db','rates','history'];
+  document.querySelectorAll('.loot-sub-tab').forEach((b,i) => {
+    b.classList.toggle('active', tabs[i] === name);
+  });
+  document.querySelectorAll('.loot-sub-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('loot-panel-' + name).classList.add('active');
+  if (name === 'db') renderLootDB();
+  if (name === 'rates') renderRatesPanel();
+  if (name === 'history') renderLootHistory();
+}
+
+// 在頁面啟動時初始化
+document.addEventListener('DOMContentLoaded', loadLootDB);
+
+// ════════════════════════════════════════
 // 預設範例備忘
 (function() {
   const grid = document.getElementById('memo-grid');

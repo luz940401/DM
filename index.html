@@ -73,33 +73,6 @@
     text-transform: uppercase;
   }
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  /* 自動同步狀態指示 */
-  .autosync-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Cinzel', serif;
-    font-size: 11px;
-    letter-spacing: 1px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--bg-card2);
-    color: var(--text-muted);
-    transition: all 0.3s;
-    cursor: pointer;
-  }
-  .autosync-indicator.connected { border-color: var(--green); color: var(--green-light); background: rgba(46,125,50,0.1); }
-  .autosync-indicator.syncing { border-color: var(--gold); color: var(--gold); animation: syncPulse 1s ease infinite; }
-  .autosync-indicator.error { border-color: var(--red); color: #e88; background: rgba(192,57,43,0.1); }
-  .autosync-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-
   .header-decor {
     font-size: 28px;
     opacity: 0.6;
@@ -161,7 +134,7 @@
 
   .section-title {
     font-family: 'Cinzel', serif;
-    font-size: 20px;
+    font-size: 18px;
     color: var(--gold-light);
     letter-spacing: 2px;
   }
@@ -178,7 +151,7 @@
     border-radius: 4px;
     border: 1px solid;
     font-family: 'Cinzel', serif;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.2s;
@@ -226,6 +199,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
+    align-items: start;
   }
 
   .memo-card {
@@ -234,8 +208,7 @@
     border-radius: 6px;
     overflow: hidden;
     transition: border-color 0.2s;
-    display: flex;
-    flex-direction: column;
+    align-self: start;
   }
   .memo-card:hover { border-color: var(--border-gold); }
 
@@ -254,7 +227,6 @@
     border-radius: 10px;
     font-family: 'Cinzel', serif;
     letter-spacing: 1px;
-    flex-shrink: 0;
   }
   .badge-alert { background: rgba(192,57,43,0.3); border: 1px solid #8b1a0f; color: #e88; }
   .badge-event { background: rgba(26,74,122,0.3); border: 1px solid #1a4a7a; color: var(--blue-light); }
@@ -266,51 +238,135 @@
     border: none;
     color: var(--gold-light);
     font-family: 'Cinzel', serif;
-    font-size: 15px;
+    font-size: 14px;
     outline: none;
   }
 
   .memo-body {
     padding: 12px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
   }
 
-  /* 備忘錄尺寸調整 - resize handle */
   .memo-textarea {
     width: 100%;
     background: none;
     border: none;
     color: var(--text-main);
     font-family: 'Noto Sans TC', serif;
-    font-size: 15px;
-    line-height: 1.7;
+    font-size: 14px;
+    line-height: 1.6;
     resize: vertical;
+    max-width: 100%;
     min-height: 80px;
-    max-height: 600px;
     outline: none;
-    overflow-y: auto;
   }
 
-  /* 高度調整 resize bar */
-  .memo-resize-bar {
-    height: 6px;
-    background: var(--border);
-    cursor: ns-resize;
+  .loot-settings-box > div:has(#lootPlayerName),
+  .loot-field-row > div:has(#dbWeight) {
+    display: none;
+  }
+
+  .entity-image-panel {
+    margin-bottom: 14px;
+  }
+  .entity-image-preview {
+    min-height: 240px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    background: var(--bg-deep);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.15s;
-    user-select: none;
-  }
-  .memo-resize-bar:hover { background: var(--border-gold); }
-  .memo-resize-bar::after {
-    content: '⋯';
-    font-size: 10px;
+    overflow: hidden;
     color: var(--text-muted);
-    letter-spacing: 2px;
-    line-height: 1;
+    font-size: 13px;
+  }
+  .entity-image-preview img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Clear readability overrides */
+  body, button, input, textarea, select,
+  .header-title, .header-subtitle, .tab-btn, .section-title,
+  .btn, .memo-title-input, .entity-name-input, .field-label,
+  .vital-stat-label, .loot-field-label, .loot-result-who,
+  .loot-rarity-badge, .loot-item-qty, .loot-item-cat,
+  .loot-db-entry-name, .loot-hist-who, .cond-name-input {
+    font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif !important;
+    letter-spacing: 0 !important;
+  }
+  body { font-size: 16px; }
+  .tab-btn { font-size: 14px; }
+  .section-title { font-size: 19px; font-weight: 700; }
+  .field-label, .loot-field-label, .vital-stat-label { font-size: 12px; }
+  .field-input, .field-textarea, .loot-field, .memo-textarea, .cond-effect-textarea { font-size: 15px; }
+  .entity-name-input { font-size: 17px; }
+  .loot-item-row {
+    align-items: stretch;
+    gap: 12px;
+    padding: 0;
+    overflow: hidden;
+  }
+  .loot-item-row > .loot-item-icon {
+    align-self: center;
+    margin-left: 12px;
+  }
+  .loot-item-row > div:nth-child(2) {
+    padding: 12px 0;
+    min-width: 0;
+  }
+  .loot-item-row > div:last-child {
+    align-self: center;
+    min-width: auto !important;
+    padding: 0 12px 0 0;
+    background: transparent;
+    border-left: 0;
+    text-align: left !important;
+  }
+  .loot-item-name { font-size: 17px !important; font-weight: 700; text-align: left; }
+  .loot-item-qty { font-size: 17px !important; font-weight: 800; text-align: left; line-height: 1.2; }
+  .loot-item-cat { font-size: 12px !important; text-align: left; }
+  .loot-db-entry-name { font-size: 16px !important; }
+  .loot-db-entry-detail,
+  .loot-db-entry div[style*="font-size:11px"] { font-size: 13px !important; }
+  .loot-db-badge, .loot-src-chip { font-size: 12px !important; }
+
+  #loot-panel-roll {
+    display: none;
+    grid-template-columns: minmax(300px, 420px) minmax(360px, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  #loot-panel-roll.active { display: grid; }
+  #loot-panel-roll .loot-roll-controls,
+  #loot-panel-roll .loot-result-zone {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  #loot-panel-roll .loot-roll-controls .loot-roll-area {
+    margin-top: 14px;
+  }
+  #loot-panel-roll .loot-result-zone {
+    min-height: 360px;
+  }
+  #loot-panel-roll .loot-result-zone .loot-result-card {
+    display: block;
+    margin-top: 0;
+    min-height: 100%;
+  }
+  #loot-panel-roll .loot-result-card:not(.show) #lootItemsList::before {
+    content: "尚未抽取戰利品";
+    display: block;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 80px 0;
+  }
+  @media (max-width: 900px) {
+    #loot-panel-roll.active { grid-template-columns: 1fr; }
   }
 
   .memo-footer {
@@ -385,18 +441,17 @@
 
   .alert-title {
     font-family: 'Cinzel', serif;
-    font-size: 22px;
+    font-size: 20px;
     color: var(--red-light);
     margin-bottom: 16px;
     letter-spacing: 2px;
   }
 
   .alert-message {
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.7;
     color: var(--text-main);
     margin-bottom: 20px;
-    white-space: pre-wrap;
   }
 
   /* ── NPC / MONSTER CARDS ── */
@@ -408,9 +463,29 @@
     align-items: center;
   }
 
+  .entity-filter {
+    display: flex;
+    gap: 6px;
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-dim);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Cinzel', serif;
+  }
+  .filter-btn.active-ally { border-color: var(--green-light); color: var(--green-light); background: rgba(76,175,80,0.1); }
+  .filter-btn.active-enemy { border-color: var(--red-light); color: var(--red-light); background: rgba(231,76,60,0.1); }
+  .filter-btn.active-all { border-color: var(--gold); color: var(--gold); background: rgba(201,146,58,0.1); }
+
   .entity-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
     gap: 16px;
   }
 
@@ -426,56 +501,18 @@
   .entity-card.enemy { border-left: 3px solid var(--red); }
 
   .entity-header {
-    padding: 14px 16px;
+    padding: 12px 14px;
     background: var(--bg-card2);
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     cursor: pointer;
     user-select: none;
   }
 
-  /* 圖片上傳區 */
-  .entity-img-wrap {
-    width: 64px;
-    height: 64px;
-    border-radius: 6px;
-    border: 2px solid var(--border);
-    background: var(--bg-deep);
-    overflow: hidden;
-    cursor: pointer;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.2s;
-    position: relative;
-  }
-  .entity-img-wrap:hover { border-color: var(--border-gold); }
-  .entity-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .entity-img-placeholder {
-    font-size: 28px;
-    color: var(--text-muted);
-    pointer-events: none;
-  }
-  .entity-img-input { display: none; }
-  .entity-img-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-size: 18px;
-    color: var(--gold-light);
-  }
-  .entity-img-wrap:hover .entity-img-overlay { opacity: 1; }
-
   .entity-type-dot {
-    width: 12px; height: 12px;
+    width: 10px; height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
   }
@@ -489,7 +526,7 @@
     border: none;
     color: var(--gold-light);
     font-family: 'Cinzel', serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     letter-spacing: 1px;
     outline: none;
@@ -498,14 +535,14 @@
 
   .entity-toggle {
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 12px;
     transition: transform 0.2s;
   }
   .entity-toggle.open { transform: rotate(180deg); }
 
   .entity-body {
     display: none;
-    padding: 16px;
+    padding: 14px;
   }
   .entity-body.open { display: block; }
 
@@ -523,7 +560,7 @@
 
   .hp-label {
     font-family: 'Cinzel', serif;
-    font-size: 13px;
+    font-size: 11px;
     color: var(--text-dim);
     letter-spacing: 1px;
     width: 50px;
@@ -536,7 +573,7 @@
     border: 1px solid var(--border);
     border-radius: 4px;
     color: var(--text-main);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     text-align: center;
     padding: 4px;
@@ -546,26 +583,26 @@
 
   .hp-bar-wrap {
     flex: 1;
-    height: 10px;
+    height: 8px;
     background: var(--bg-deep);
-    border-radius: 5px;
+    border-radius: 4px;
     overflow: hidden;
     border: 1px solid var(--border);
   }
 
   .hp-bar {
     height: 100%;
-    border-radius: 5px;
+    border-radius: 4px;
     transition: width 0.4s ease;
   }
 
   .hp-adj-btn {
-    width: 30px; height: 30px;
+    width: 26px; height: 26px;
     border-radius: 4px;
     border: 1px solid var(--border);
     background: var(--bg-card2);
     color: var(--text-dim);
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     transition: all 0.15s;
     flex-shrink: 0;
@@ -573,18 +610,18 @@
   .hp-adj-btn:hover { border-color: var(--gold); color: var(--gold); }
 
   .hp-delta-input {
-    width: 54px;
+    width: 50px;
     background: var(--bg-card2);
     border: 1px solid var(--border);
     border-radius: 4px;
     color: var(--text-main);
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
-    padding: 4px;
+    padding: 3px;
     outline: none;
   }
 
-  /* Vital Stats */
+  /* Vital Stats (HP / Shield / Armor) */
   .vital-stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -609,7 +646,7 @@
 
   .vital-stat-label {
     font-family: 'Cinzel', serif;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-dim);
     letter-spacing: 1px;
     margin-bottom: 6px;
@@ -621,13 +658,13 @@
     background: none;
     border: none;
     color: var(--text-main);
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     text-align: center;
     outline: none;
     font-family: 'Cinzel', serif;
   }
-  .vital-stat-input::placeholder { color: var(--text-muted); font-size: 20px; }
+  .vital-stat-input::placeholder { color: var(--text-muted); font-size: 18px; }
 
   /* Loot Drop Section */
   .loot-drop-section {
@@ -638,7 +675,7 @@
 
   .loot-drop-header {
     font-family: 'Cinzel', serif;
-    font-size: 15px;
+    font-size: 13px;
     color: var(--gold-light);
     letter-spacing: 1px;
     margin-bottom: 10px;
@@ -662,17 +699,17 @@
     background: var(--bg-deep);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 8px 4px;
+    padding: 6px 4px;
     text-align: center;
   }
 
   .stat-abbr {
     font-family: 'Cinzel', serif;
-    font-size: 11px;
+    font-size: 9px;
     color: var(--gold);
     letter-spacing: 1px;
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
   }
 
   .stat-val-input {
@@ -680,14 +717,14 @@
     background: none;
     border: none;
     color: var(--text-main);
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 600;
     text-align: center;
     outline: none;
   }
 
   .stat-mod {
-    font-size: 12px;
+    font-size: 10px;
     color: var(--text-dim);
   }
 
@@ -703,10 +740,10 @@
 
   .field-label {
     font-family: 'Cinzel', serif;
-    font-size: 12px;
+    font-size: 10px;
     color: var(--text-muted);
     letter-spacing: 1px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
 
   .field-input, .field-textarea {
@@ -716,8 +753,8 @@
     border-radius: 4px;
     color: var(--text-main);
     font-family: 'Noto Sans TC', serif;
-    font-size: 14px;
-    padding: 7px 10px;
+    font-size: 13px;
+    padding: 6px 8px;
     outline: none;
     transition: border-color 0.15s;
   }
@@ -726,7 +763,7 @@
   .field-textarea {
     resize: vertical;
     min-height: 80px;
-    line-height: 1.7;
+    line-height: 1.6;
   }
 
   .field-textarea.tall { min-height: 110px; }
@@ -742,7 +779,7 @@
 
   /* ── CONDITIONS TABLE ── */
   .conditions-intro {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-dim);
     margin-bottom: 16px;
     line-height: 1.6;
@@ -751,7 +788,7 @@
 
   .cond-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 14px;
   }
 
@@ -763,7 +800,7 @@
   }
 
   .cond-header {
-    padding: 12px 14px;
+    padding: 10px 14px;
     background: var(--bg-card2);
     border-bottom: 1px solid var(--border);
     display: flex;
@@ -773,24 +810,23 @@
 
   .cond-name-input {
     font-family: 'Cinzel', serif;
-    font-size: 16px;
+    font-size: 14px;
     color: var(--gold-light);
     background: none;
     border: none;
     outline: none;
     letter-spacing: 1px;
     flex: 1;
-    font-weight: 600;
   }
 
   .cond-icon {
-    font-size: 20px;
-    width: 30px;
+    font-size: 18px;
+    width: 28px;
     text-align: center;
   }
 
   .cond-body {
-    padding: 12px 14px;
+    padding: 10px 14px;
   }
 
   .cond-effect-textarea {
@@ -799,28 +835,26 @@
     border: none;
     color: var(--text-main);
     font-family: 'Noto Sans TC', serif;
-    font-size: 14px;
-    line-height: 1.8;
-    resize: vertical;
+    font-size: 13px;
+    line-height: 1.65;
+    resize: none;
     outline: none;
-    min-height: 100px;
+    min-height: 70px;
   }
 
   .add-cond-btn {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 14px;
+    padding: 12px;
     background: var(--bg-card);
     border: 1px dashed var(--border);
     border-radius: 6px;
     color: var(--text-muted);
     cursor: pointer;
     font-family: 'Cinzel', serif;
-    font-size: 14px;
+    font-size: 13px;
     transition: all 0.2s;
-    width: 100%;
-    margin-top: 14px;
   }
   .add-cond-btn:hover { border-color: var(--gold); color: var(--gold); }
 
@@ -839,7 +873,7 @@
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--border-gold); }
 
-  /* ── GOOGLE SHEETS SYNC BAR ── */
+  /* ── GOOGLE SHEETS SYNC ── */
   .sync-bar {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -856,7 +890,7 @@
 
   .sync-label {
     font-family: 'Cinzel', serif;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-dim);
     letter-spacing: 1px;
     flex-shrink: 0;
@@ -915,8 +949,6 @@
     max-width: 560px;
     width: 90%;
     box-shadow: 0 0 40px rgba(201,146,58,0.2);
-    max-height: 80vh;
-    overflow-y: auto;
   }
 
   .sync-modal h2 {
@@ -966,47 +998,7 @@
     justify-content: flex-end;
   }
 
-  /* 自動同步設定區 */
-  .autosync-section {
-    margin-top: 16px;
-    padding: 14px;
-    background: var(--bg-deep);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-  }
-  .autosync-section label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    font-family: 'Cinzel', serif;
-    font-size: 13px;
-    color: var(--text-main);
-  }
-  .autosync-toggle {
-    width: 40px;
-    height: 22px;
-    background: var(--bg-card2);
-    border: 1px solid var(--border);
-    border-radius: 11px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.25s;
-  }
-  .autosync-toggle.on { background: rgba(46,125,50,0.4); border-color: var(--green); }
-  .autosync-toggle::after {
-    content: '';
-    width: 16px;
-    height: 16px;
-    background: var(--text-muted);
-    border-radius: 50%;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    transition: all 0.25s;
-  }
-  .autosync-toggle.on::after { left: 20px; background: var(--green-light); }
-
+  /* body padding to avoid content hidden behind sync bar */
   body { padding-bottom: 56px; }
 
   /* ── MISC ── */
@@ -1035,7 +1027,7 @@
     border: 1px solid var(--border);
     border-radius: 4px;
     color: var(--text-main);
-    font-size: 14px;
+    font-size: 13px;
     padding: 7px 12px;
     outline: none;
     transition: border-color 0.15s;
@@ -1048,6 +1040,7 @@
      LOOT GENERATOR
   ══════════════════════════════════════ */
 
+  /* 來源類型選擇 */
   .loot-source-tabs {
     display: flex;
     gap: 8px;
@@ -1061,7 +1054,7 @@
     background: none;
     color: var(--text-dim);
     font-family: 'Cinzel', serif;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.2s;
@@ -1093,7 +1086,7 @@
   }
   .loot-roll-title {
     font-family: 'Cinzel', serif;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-dim);
     letter-spacing: 2px;
     margin-bottom: 16px;
@@ -1103,13 +1096,13 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 16px 48px;
+    padding: 14px 40px;
     border-radius: 6px;
     border: 2px solid var(--border-gold);
     background: linear-gradient(135deg, #2a1d06, #3d2a0a);
     color: var(--gold-light);
     font-family: 'Cinzel', serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     letter-spacing: 2px;
     cursor: pointer;
@@ -1137,7 +1130,7 @@
   .loot-result-card.show { display: block; }
 
   .loot-result-header {
-    padding: 14px 18px;
+    padding: 12px 18px;
     background: linear-gradient(135deg, var(--bg-card2), var(--bg-panel));
     border-bottom: 1px solid var(--border);
     display: flex;
@@ -1148,87 +1141,58 @@
   }
   .loot-result-who {
     font-family: 'Cinzel', serif;
-    font-size: 15px;
+    font-size: 13px;
     color: var(--gold-light);
     letter-spacing: 1px;
   }
   .loot-rarity-badge {
     font-family: 'Cinzel', serif;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 2px;
-    padding: 4px 14px;
+    padding: 3px 12px;
     border-radius: 10px;
     text-transform: uppercase;
   }
-  /* 稀有度底色 - 直覺化 */
-  .rarity-common   { background: #2a2a2a; border: 1px solid #666; color: #d0d0d0; }
-  .rarity-uncommon { background: rgba(40,180,80,0.25); border: 1px solid #2a8a45; color: #4cdb6e; }
-  .rarity-rare     { background: rgba(40,120,220,0.3); border: 1px solid #2a5aaa; color: #7ac8ff; }
-  .rarity-epic     { background: rgba(140,60,220,0.3); border: 1px solid #7a3aaa; color: #d090ff; }
+  .rarity-common   { background: rgba(200,200,200,0.1); border: 1px solid #666; color: #d0d0d0; }
+  .rarity-uncommon { background: rgba(40,180,80,0.15);  border: 1px solid #2a8a45; color: #4cdb6e; }
+  .rarity-rare     { background: rgba(40,120,220,0.2);  border: 1px solid #2a5aaa; color: #5aadff; }
+  .rarity-epic     { background: rgba(140,60,220,0.2);  border: 1px solid #7a3aaa; color: #c47fff; }
   .rarity-legendary {
-    background: rgba(200,120,0,0.35);
-    border: 1px solid #aa6600;
-    color: #ffcc44;
+    background: rgba(180,30,30,0.25);
+    border: 1px solid #aa2222;
+    color: #ff5555;
     animation: legGlow 1.2s alternate infinite;
   }
-  @keyframes legGlow { from { box-shadow: 0 0 4px rgba(200,150,0,0.3); } to { box-shadow: 0 0 16px rgba(200,150,0,0.9); } }
+  @keyframes legGlow { from { box-shadow: 0 0 4px rgba(200,40,40,0.3); } to { box-shadow: 0 0 16px rgba(200,40,40,0.9); } }
 
   .loot-items-list {
-    padding: 16px 18px;
+    padding: 14px 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
-
-  /* 掉落物行 - 底色改為稀有度底色 */
   .loot-item-row {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    transition: all 0.15s;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.15s;
   }
-  .loot-item-row:hover { filter: brightness(1.1); }
-
-  /* 各稀有度底色 */
-  .loot-item-common   { background: rgba(80,80,80,0.25); border-color: #555; }
-  .loot-item-uncommon { background: rgba(40,140,60,0.2); border-color: #2a7a40; }
-  .loot-item-rare     { background: rgba(30,80,180,0.25); border-color: #2a5aaa; }
-  .loot-item-epic     { background: rgba(100,40,180,0.25); border-color: #6a30aa; }
-  .loot-item-legendary { background: rgba(160,90,0,0.3); border-color: #aa6600; }
-
-  .loot-item-icon { font-size: 26px; flex-shrink: 0; width: 36px; text-align: center; }
-  .loot-item-info { flex: 1; text-align: left; }
-  .loot-item-name {
-    font-family: 'Cinzel', serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-main);
-    margin-bottom: 2px;
-    text-align: left;
-  }
-  .loot-item-note { font-size: 12px; color: var(--text-dim); text-align: left; }
+  .loot-item-row:hover { border-color: var(--border-gold); }
+  .loot-item-icon { font-size: 20px; flex-shrink: 0; width: 28px; text-align: center; }
+  .loot-item-name { flex: 1; font-size: 14px; color: var(--text-main); }
   .loot-item-qty  {
     font-family: 'Cinzel', serif;
-    font-size: 22px;
-    font-weight: 700;
+    font-size: 15px;
+    font-weight: 600;
     color: var(--gold-light);
     white-space: nowrap;
-    text-align: right;
-    min-width: 60px;
   }
-  .loot-item-rarity-tag {
-    font-family: 'Cinzel', serif;
-    font-size: 10px;
-    letter-spacing: 1px;
-    padding: 2px 8px;
-    border-radius: 6px;
-    text-align: right;
-    white-space: nowrap;
-  }
-  .loot-empty-msg { text-align: center; color: var(--text-muted); font-size: 15px; padding: 20px 0; font-family: 'Crimson Text', serif; }
+  .loot-item-cat  { font-size: 10px; color: var(--text-muted); font-family: 'Cinzel', serif; letter-spacing: 1px; }
+  .loot-empty-msg { text-align: center; color: var(--text-muted); font-size: 14px; padding: 20px 0; font-family: 'Crimson Text', serif; }
 
   /* 掉落資料庫 */
   .loot-panel-grid {
@@ -1245,11 +1209,11 @@
     overflow: hidden;
   }
   .loot-panel-head {
-    padding: 12px 16px;
+    padding: 10px 16px;
     background: var(--bg-card2);
     border-bottom: 1px solid var(--border);
     font-family: 'Cinzel', serif;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--gold-light);
     letter-spacing: 1px;
     display: flex;
@@ -1264,8 +1228,8 @@
     border: 1px solid var(--border);
     border-radius: 4px;
     color: var(--text-main);
-    font-size: 14px;
-    padding: 8px 10px;
+    font-size: 13px;
+    padding: 7px 10px;
     outline: none;
     transition: border-color 0.15s;
     width: 100%;
@@ -1286,42 +1250,34 @@
     padding-right: 24px;
     background-color: var(--bg-card2);
   }
-  .loot-field-label { font-size: 12px; color: var(--text-muted); font-family: 'Cinzel', serif; letter-spacing: 1px; margin-bottom: 4px; }
+  .loot-field-label { font-size: 11px; color: var(--text-muted); font-family: 'Cinzel', serif; letter-spacing: 1px; margin-bottom: 4px; }
 
-  /* DB 列表 - 可修改版 */
+  /* DB 列表 */
   .loot-db-list {
-    max-height: 420px;
+    max-height: 340px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
   }
   .loot-db-list::-webkit-scrollbar { width: 4px; }
   .loot-db-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
   .loot-db-entry {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
-    padding: 8px 10px;
+    padding: 7px 10px;
     background: var(--bg-card2);
     border: 1px solid var(--border);
     border-radius: 5px;
-    font-size: 13px;
+    font-size: 12px;
     transition: border-color 0.15s;
-    flex-direction: column;
   }
   .loot-db-entry:hover { border-color: var(--border-gold); }
-
-  .loot-db-entry-top {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 8px;
-  }
-
-  .loot-db-entry-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
-  .loot-db-entry-name { flex: 1; color: var(--text-main); font-size: 14px; font-weight: 600; }
+  .loot-db-entry-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+  .loot-db-entry-name { flex: 1; color: var(--text-main); font-weight: 600; }
+  .loot-db-entry-detail { color: var(--text-muted); white-space: nowrap; }
   .loot-db-badge {
     font-family: 'Cinzel', serif;
     font-size: 9px;
@@ -1330,28 +1286,6 @@
     border-radius: 8px;
     white-space: nowrap;
   }
-
-  /* 修改按鈕列 */
-  .loot-db-actions {
-    display: flex;
-    gap: 6px;
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .loot-db-edit-btn {
-    padding: 3px 10px;
-    border-radius: 3px;
-    border: 1px solid var(--border-gold);
-    background: rgba(201,146,58,0.1);
-    color: var(--gold);
-    font-size: 10px;
-    cursor: pointer;
-    font-family: 'Cinzel', serif;
-    transition: all 0.15s;
-  }
-  .loot-db-edit-btn:hover { background: rgba(201,146,58,0.3); }
-
   .loot-db-del {
     padding: 3px 8px;
     border-radius: 3px;
@@ -1363,23 +1297,9 @@
     flex-shrink: 0;
     font-family: 'Cinzel', serif;
     transition: all 0.15s;
-    margin-left: auto;
   }
   .loot-db-del:hover { background: rgba(192,57,43,0.35); }
   .loot-db-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px 0; font-family: 'Crimson Text', serif; font-style: italic; }
-
-  /* 編輯行 inline */
-  .loot-db-edit-row {
-    display: none;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    padding-top: 8px;
-    border-top: 1px solid var(--border);
-  }
-  .loot-db-edit-row.open { display: flex; }
-  .loot-db-edit-row .loot-field { margin-bottom: 0; font-size: 12px; padding: 5px 8px; }
-  .loot-db-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 
   /* 歷史紀錄 */
   .loot-history-list { display: flex; flex-direction: column; gap: 8px; }
@@ -1388,7 +1308,7 @@
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 10px 14px;
-    font-size: 13px;
+    font-size: 12px;
   }
   .loot-hist-top {
     display: flex;
@@ -1397,11 +1317,11 @@
     margin-bottom: 6px;
     flex-wrap: wrap;
   }
-  .loot-hist-who { font-family: 'Cinzel', serif; color: var(--gold); font-size: 13px; letter-spacing: 1px; flex: 1; }
+  .loot-hist-who { font-family: 'Cinzel', serif; color: var(--gold); font-size: 12px; letter-spacing: 1px; flex: 1; }
   .loot-hist-time { color: var(--text-muted); font-size: 11px; }
-  .loot-hist-items { color: var(--text-dim); line-height: 1.7; font-size: 13px; }
+  .loot-hist-items { color: var(--text-dim); line-height: 1.7; }
 
-  /* 設定面板 - 移除玩家名稱欄位 */
+  /* 設定面板 */
   .loot-settings-box {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -1423,13 +1343,13 @@
     gap: 0;
   }
   .loot-sub-tab {
-    padding: 10px 22px;
+    padding: 9px 20px;
     border: none;
     border-bottom: 3px solid transparent;
     background: none;
     color: var(--text-muted);
     font-family: 'Cinzel', serif;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.2s;
@@ -1440,6 +1360,7 @@
   .loot-sub-panel { display: none; }
   .loot-sub-panel.active { display: block; }
 
+  /* 來源標籤 chip */
   .loot-src-chip {
     display: inline-block;
     padding: 2px 10px;
@@ -1451,7 +1372,6 @@
     border: 1px solid var(--border-gold);
     color: var(--gold);
   }
-
   /* 機率設定 */
   .loot-rates-grid {
     display: flex;
@@ -1469,8 +1389,18 @@
     transition: border-color 0.15s;
   }
   .loot-rate-row:hover { border-color: var(--border-gold); }
-  .loot-rate-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
-  .loot-rate-label { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 1px; width: 80px; flex-shrink: 0; }
+  .loot-rate-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .loot-rate-label {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    width: 80px;
+    flex-shrink: 0;
+  }
   .loot-rate-slider {
     flex: 1;
     -webkit-appearance: none;
@@ -1496,52 +1426,38 @@
     border-radius: 4px;
     color: var(--text-main);
     font-family: 'Cinzel', serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     padding: 5px 8px;
-    width: 70px;
+    width: 60px;
     text-align: center;
     outline: none;
     transition: border-color 0.15s;
   }
   .loot-rate-num:focus { border-color: var(--border-gold); }
-  .loot-preview-bar-wrap { display: flex; align-items: center; gap: 10px; }
-  .loot-preview-track { flex: 1; height: 8px; background: var(--bg-card2); border-radius: 4px; overflow: hidden; }
-  .loot-preview-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
-  .loot-preview-pct { font-family: 'Cinzel', serif; font-size: 13px; width: 54px; text-align: right; flex-shrink: 0; }
-
-  /* 編輯 Modal */
-  .edit-modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 350;
-    background: rgba(0,0,0,0.85);
-    align-items: center;
-    justify-content: center;
-  }
-  .edit-modal-overlay.show { display: flex; }
-  .edit-modal {
-    background: var(--bg-card);
-    border: 1px solid var(--border-gold);
-    border-radius: 8px;
-    padding: 24px 28px;
-    max-width: 480px;
-    width: 92%;
-    box-shadow: 0 0 40px rgba(201,146,58,0.2);
-  }
-  .edit-modal h3 {
-    font-family: 'Cinzel', serif;
-    color: var(--gold-light);
-    font-size: 16px;
-    letter-spacing: 2px;
-    margin-bottom: 16px;
-  }
-  .edit-modal-footer {
+  .loot-preview-bar-wrap {
     display: flex;
+    align-items: center;
     gap: 10px;
-    margin-top: 16px;
-    justify-content: flex-end;
+  }
+  .loot-preview-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-card2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .loot-preview-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  .loot-preview-pct {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    width: 52px;
+    text-align: right;
+    flex-shrink: 0;
   }
 </style>
 </head>
@@ -1553,13 +1469,7 @@
     <div class="header-title">⚔ DUNGEON MASTER</div>
     <div class="header-subtitle">Campaign Dashboard · D&D 5e</div>
   </div>
-  <div class="header-right">
-    <div class="autosync-indicator" id="autosyncIndicator" onclick="showSyncHelp()" title="點擊設定同步">
-      <span class="autosync-dot"></span>
-      <span id="autosyncLabel">未連線</span>
-    </div>
-    <div style="font-size:28px;opacity:0.6">🐉</div>
-  </div>
+  <div class="header-decor">🐉</div>
 </header>
 
 <!-- TABS -->
@@ -1572,7 +1482,7 @@
   <button class="tab-btn" onclick="switchTab('conditions')"><span class="tab-icon">⚗</span>異常狀態</button>
 </div>
 
-<!-- ════════════════════ MEMO PAGE -->
+<!-- ════════════════════════════════════════ MEMO PAGE -->
 <div class="page" id="page-memo">
   <div class="section-header">
     <span class="section-title">📜 備忘錄 / 事件提示</span>
@@ -1585,16 +1495,19 @@
     <button class="btn btn-gold" onclick="addMemo('event')">📅 計時事件</button>
   </div>
 
-  <div class="memo-grid" id="memo-grid"></div>
+  <div class="memo-grid" id="memo-grid">
+    <!-- 預設範例 -->
+  </div>
 </div>
 
-<!-- ════════════════════ LOOT PAGE -->
+<!-- ════════════════════════════════════════ LOOT PAGE -->
 <div class="page active" id="page-loot">
   <div class="section-header">
     <span class="section-title">🎲 戰利品生成器</span>
     <div class="section-line"></div>
   </div>
 
+  <!-- 子頁籤 -->
   <div class="loot-sub-tabs">
     <button class="loot-sub-tab active" onclick="switchLootSub('roll')">⚄ 抽取戰利品</button>
     <button class="loot-sub-tab" onclick="switchLootSub('db')">📦 掉落資料庫</button>
@@ -1604,15 +1517,21 @@
 
   <!-- ── 抽取頁 ── -->
   <div class="loot-sub-panel active" id="loot-panel-roll">
+
+    <!-- 來源選擇 -->
     <div style="margin-bottom:14px">
-      <div class="loot-field-label" style="margin-bottom:8px;font-size:13px">選擇來源類型（篩選掉落池）</div>
+      <div class="loot-field-label" style="margin-bottom:8px">選擇來源類型（篩選掉落池）</div>
       <div class="loot-source-tabs" id="lootSourceTabs">
         <button class="loot-src-btn active" data-src="all" onclick="setLootSource(this)">✦ 全部</button>
       </div>
     </div>
 
-    <!-- 設定（移除玩家名稱） -->
+    <!-- 設定 -->
     <div class="loot-settings-box">
+      <div>
+        <div class="loot-field-label">玩家 / 角色</div>
+        <input class="loot-field" id="lootPlayerName" placeholder="玩家名稱（選填）" style="margin-bottom:0">
+      </div>
       <div>
         <div class="loot-field-label">最少抽幾項</div>
         <input class="loot-field loot-field-sm" id="lootMinItems" type="number" value="1" min="1" max="20" style="margin-bottom:0">
@@ -1634,6 +1553,7 @@
       </div>
     </div>
 
+    <!-- 大按鈕 -->
     <div class="loot-roll-area">
       <div class="loot-roll-title">準備好了嗎？</div>
       <button class="loot-big-btn" onclick="rollLoot()">
@@ -1641,38 +1561,46 @@
       </button>
     </div>
 
+    <!-- 結果 -->
     <div class="loot-result-card" id="lootResultCard">
       <div class="loot-result-header">
-        <div class="loot-result-who" id="lootResultWho">🎯 獲得物品</div>
+        <div class="loot-result-who" id="lootResultWho">🎯 玩家的收穫</div>
         <div class="loot-rarity-badge rarity-common" id="lootResultRarity">COMMON</div>
       </div>
       <div class="loot-items-list" id="lootItemsList"></div>
     </div>
+
   </div>
 
   <!-- ── 資料庫頁 ── -->
   <div class="loot-sub-panel" id="loot-panel-db">
     <div class="loot-panel-grid">
+
       <!-- 左：新增表單 -->
       <div class="loot-panel-box">
-        <div class="loot-panel-head">＋ 新增掉落物</div>
+        <div class="loot-panel-head">
+          ＋ 新增掉落物
+        </div>
         <div class="loot-panel-body">
           <div class="loot-field-label">圖示 & 名稱</div>
           <div class="loot-field-row" style="margin-bottom:8px">
             <input class="loot-field" id="dbIcon" placeholder="🗡" style="max-width:56px;text-align:center;margin-bottom:0;font-size:18px">
             <input class="loot-field" id="dbName" placeholder="物品名稱（例：回血藥水）" style="margin-bottom:0">
           </div>
+
           <div class="loot-field-label">來源類型標籤</div>
           <input class="loot-field" id="dbSource" placeholder="例：寶箱、野外事件、商人、BOSS…">
+
           <div class="loot-field-label">稀有度</div>
           <select class="loot-field" id="dbRarity">
             <option value="common">⬜ 白色・普通</option>
             <option value="uncommon">🟩 綠色・魔法</option>
             <option value="rare">🟦 藍色・稀有</option>
             <option value="epic">🟪 紫色・獨特</option>
-            <option value="legendary">🟥 橙色・傳說</option>
+            <option value="legendary">🟥 紅色・傳說</option>
           </select>
-          <div class="loot-field-label">數量範圍</div>
+
+          <div class="loot-field-label">數量範圍 & 出現權重</div>
           <div class="loot-field-row" style="margin-bottom:8px">
             <div style="flex:1">
               <div class="loot-field-label" style="font-size:10px">最少數量</div>
@@ -1682,18 +1610,24 @@
               <div class="loot-field-label" style="font-size:10px">最多數量</div>
               <input class="loot-field" id="dbMaxQty" type="number" value="1" min="1" style="margin-bottom:0">
             </div>
+            <div style="flex:1">
+              <div class="loot-field-label" style="font-size:10px">權重（越高越常）</div>
+              <input class="loot-field" id="dbWeight" type="number" value="10" min="1" style="margin-bottom:0">
+            </div>
           </div>
+
           <div class="loot-field-label">備註（選填）</div>
           <input class="loot-field" id="dbNote" placeholder="例：+1 武器、只限地下城區域…">
-          <button class="btn btn-gold" style="width:100%;margin-top:4px;font-size:14px" onclick="addLootEntry()">＋ 新增至資料庫</button>
+
+          <button class="btn btn-gold" style="width:100%;margin-top:4px" onclick="addLootEntry()">＋ 新增至資料庫</button>
         </div>
       </div>
 
       <!-- 右：現有列表 -->
       <div class="loot-panel-box">
         <div class="loot-panel-head">
-          <span>📦 掉落資料庫 <span id="lootDBCount" style="color:var(--text-dim);font-size:12px">（0 項）</span></span>
-          <input class="search-input" type="text" placeholder="🔍 搜尋…" oninput="filterLootDB(this.value)" style="width:130px;font-size:12px;padding:5px 8px">
+          <span>📦 掉落資料庫 <span id="lootDBCount" style="color:var(--text-dim);font-size:11px">（0 項）</span></span>
+          <input class="search-input" type="text" placeholder="🔍 搜尋…" oninput="filterLootDB(this.value)" style="width:120px;font-size:11px;padding:4px 8px">
         </div>
         <div class="loot-panel-body" style="padding:10px">
           <div class="loot-db-list" id="lootDBList">
@@ -1707,17 +1641,23 @@
   <!-- ── 機率設定頁 ── -->
   <div class="loot-sub-panel" id="loot-panel-rates">
     <div style="max-width:560px">
-      <p style="color:var(--text-dim);font-size:14px;font-family:'Crimson Text',serif;margin-bottom:20px;line-height:1.7;">
+      <p style="color:var(--text-dim);font-size:13px;font-family:'Crimson Text',serif;margin-bottom:20px;line-height:1.7;">
         設定每次抽取時，各稀有度的<strong style="color:var(--gold)">出現機率</strong>。系統會先依此機率決定「本次物品的稀有度等級」，再從該等級的掉落池中隨機抽取。五個數字加總不需要等於 100，系統會自動換算比例。
       </p>
-      <div class="loot-rates-grid" id="lootRatesGrid"></div>
+
+      <div class="loot-rates-grid" id="lootRatesGrid">
+        <!-- JS 動態生成 -->
+      </div>
+
       <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">
         <button class="btn btn-gold" onclick="saveRates()">💾 套用設定</button>
         <button class="btn btn-sm" style="border-color:var(--border);color:var(--text-dim);background:var(--bg-card2)" onclick="resetRates()">↺ 恢復預設</button>
       </div>
-      <div id="ratesSavedMsg" style="display:none;margin-top:12px;color:#4cdb6e;font-family:'Cinzel',serif;font-size:13px;letter-spacing:1px">✓ 已套用！</div>
+
+      <div id="ratesSavedMsg" style="display:none;margin-top:12px;color:#4cdb6e;font-family:'Cinzel',serif;font-size:12px;letter-spacing:1px">✓ 已套用！</div>
+
       <div style="margin-top:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:14px">
-        <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:10px">📊 目前換算後的實際機率</div>
+        <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:10px">📊 目前換算後的實際機率</div>
         <div id="ratesPreview" style="display:flex;flex-direction:column;gap:6px"></div>
       </div>
     </div>
@@ -1726,7 +1666,7 @@
   <!-- ── 歷史紀錄頁 ── -->
   <div class="loot-sub-panel" id="loot-panel-history">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-      <span style="color:var(--text-dim);font-family:'Cinzel',serif;font-size:13px;letter-spacing:1px">最近 50 筆抽取紀錄</span>
+      <span style="color:var(--text-dim);font-family:'Cinzel',serif;font-size:12px;letter-spacing:1px">最近 50 筆抽取紀錄</span>
       <button class="btn btn-red btn-sm" onclick="clearLootHistory()">🗑 清除紀錄</button>
     </div>
     <div class="loot-history-list" id="lootHistoryList">
@@ -1735,7 +1675,7 @@
   </div>
 </div>
 
-<!-- ════════════════════ ALLY PAGE -->
+<!-- ════════════════════════════════════════ ALLY PAGE -->
 <div class="page" id="page-ally">
   <div class="section-header">
     <span class="section-title">🛡 友軍 NPC</span>
@@ -1748,7 +1688,7 @@
   <div class="entity-list" id="list-ally"></div>
 </div>
 
-<!-- ════════════════════ ENEMY PAGE -->
+<!-- ════════════════════════════════════════ ENEMY PAGE -->
 <div class="page" id="page-enemy">
   <div class="section-header">
     <span class="section-title">⚔ 敵軍 NPC</span>
@@ -1761,7 +1701,7 @@
   <div class="entity-list" id="list-enemy"></div>
 </div>
 
-<!-- ════════════════════ MONSTER PAGE -->
+<!-- ════════════════════════════════════════ MONSTER PAGE -->
 <div class="page" id="page-monster">
   <div class="section-header">
     <span class="section-title">💀 怪物資訊</span>
@@ -1774,22 +1714,27 @@
   <div class="entity-list" id="list-monster"></div>
 </div>
 
-<!-- ════════════════════ CONDITIONS PAGE -->
+<!-- ════════════════════════════════════════ CONDITIONS PAGE -->
 <div class="page" id="page-conditions">
   <div class="section-header">
     <span class="section-title">⚗ D&D 5e 異常狀態</span>
     <div class="section-line"></div>
-    <button class="btn btn-gold btn-sm" onclick="addCondition()">＋ 新增自訂</button>
   </div>
-  <p class="conditions-intro">以下為 D&D 5e（2024年版）標準異常狀態效果說明，內容均可直接編輯修改。點選文字即可微調說明。</p>
+  <p class="conditions-intro">以下為 D&D 5e 標準異常狀態效果說明，內容均可直接編輯修改。點選文字即可微調說明。</p>
+
   <div class="cond-grid" id="cond-grid"></div>
+
+  <br>
+  <button class="add-cond-btn" onclick="addCondition()">
+    ＋ 新增自訂異常狀態
+  </button>
 </div>
 
 <!-- GOOGLE SHEETS SYNC BAR -->
 <div class="sync-bar">
   <span class="sync-label">📊 Google Sheets</span>
-  <input class="sync-input" id="sheetUrlInput" type="text" placeholder="貼上 Apps Script 網址 (Web App URL)…" oninput="onSyncUrlChange()">
-  <button class="btn btn-gold btn-sm" onclick="syncToSheet()">⬆ 手動儲存</button>
+  <input class="sync-input" id="sheetUrlInput" type="text" placeholder="貼上 Apps Script 網址 (Web App URL)…" oninput="saveSyncUrl()">
+  <button class="btn btn-gold btn-sm" onclick="syncToSheet()">⬆ 儲存至 Sheet</button>
   <button class="btn btn-gold btn-sm" onclick="loadFromSheet()">⬇ 從 Sheet 讀取</button>
   <button class="btn btn-sm" style="border-color:var(--border);color:var(--text-dim);background:var(--bg-card2);" onclick="showSyncHelp()">❓ 設定說明</button>
   <span class="sync-status idle" id="syncStatus">未連線</span>
@@ -1808,27 +1753,10 @@
     <ol start="4">
       <li>點選「<strong>部署 → 新增部署</strong>」，類型選「<strong>網頁應用程式</strong>」。</li>
       <li>執行身分選「<strong>我</strong>」，存取對象選「<strong>任何人</strong>」，按「<strong>部署</strong>」。</li>
-      <li>複製產生的 <strong>網頁應用程式 URL</strong>，貼入下方輸入框。</li>
+      <li>複製產生的 <strong>網頁應用程式 URL</strong>，貼入上方輸入框。</li>
       <li>首次使用時需授權 Google 帳號存取試算表。</li>
     </ol>
-
-    <div style="margin-top:14px">
-      <label style="display:block;margin-bottom:8px;font-family:'Cinzel',serif;font-size:12px;color:var(--text-dim);letter-spacing:1px">App Script URL</label>
-      <input class="sync-input" id="modalSyncUrl" type="text" placeholder="貼上 Web App URL…" style="width:100%;display:block;margin-bottom:12px" oninput="syncModalUrlToBar()">
-    </div>
-
-    <!-- 自動同步開關 -->
-    <div class="autosync-section">
-      <label>
-        <div class="autosync-toggle" id="autosyncToggle" onclick="toggleAutoSync()"></div>
-        <span>自動同步（每 30 秒若有修改即自動儲存至 Google Sheets）</span>
-      </label>
-      <div style="margin-top:8px;font-size:12px;color:var(--text-muted);font-family:'Noto Sans TC',sans-serif">
-        開啟後只要輸入了 App Script URL，系統會自動偵測變更並同步，不需手動按儲存。
-      </div>
-    </div>
-
-    <p style="color:var(--gold);font-size:12px;margin-top:12px">⚡ 資料自動分欄：單格超過 45,000 字元時自動換至下一欄，確保永久可用。</p>
+    <p style="color:var(--gold);font-size:12px;">⚡ 資料自動分欄：單格超過 45,000 字元時自動換至下一欄，確保永久可用。</p>
     <div class="sync-modal-footer">
       <button class="btn btn-gold" onclick="copyAppsScript()">📋 複製程式碼</button>
       <button class="btn btn-red" onclick="document.getElementById('syncModalOverlay').classList.remove('show')">關閉</button>
@@ -1842,46 +1770,6 @@
     <div class="alert-title" id="alertTitle">⚠ 事件觸發！</div>
     <div class="alert-message" id="alertMessage"></div>
     <button class="btn btn-gold" onclick="document.getElementById('alertOverlay').classList.remove('show')">確認</button>
-  </div>
-</div>
-
-<!-- 掉落物修改 Modal -->
-<div class="edit-modal-overlay" id="editLootModalOverlay" onclick="closeEditLootModal(event)">
-  <div class="edit-modal">
-    <h3>✏ 修改掉落物</h3>
-    <input type="hidden" id="editLootId">
-    <div class="loot-field-label">圖示 & 名稱</div>
-    <div class="loot-field-row" style="margin-bottom:8px">
-      <input class="loot-field" id="editDbIcon" placeholder="🗡" style="max-width:56px;text-align:center;margin-bottom:0;font-size:18px">
-      <input class="loot-field" id="editDbName" placeholder="物品名稱" style="margin-bottom:0">
-    </div>
-    <div class="loot-field-label">來源類型標籤</div>
-    <input class="loot-field" id="editDbSource" placeholder="例：寶箱、BOSS…">
-    <div class="loot-field-label">稀有度</div>
-    <select class="loot-field" id="editDbRarity">
-      <option value="common">⬜ 白色・普通</option>
-      <option value="uncommon">🟩 綠色・魔法</option>
-      <option value="rare">🟦 藍色・稀有</option>
-      <option value="epic">🟪 紫色・獨特</option>
-      <option value="legendary">🟥 橙色・傳說</option>
-    </select>
-    <div class="loot-field-label">數量範圍</div>
-    <div class="loot-field-row" style="margin-bottom:8px">
-      <div style="flex:1">
-        <div class="loot-field-label" style="font-size:10px">最少數量</div>
-        <input class="loot-field" id="editDbMinQty" type="number" value="1" min="1" style="margin-bottom:0">
-      </div>
-      <div style="flex:1">
-        <div class="loot-field-label" style="font-size:10px">最多數量</div>
-        <input class="loot-field" id="editDbMaxQty" type="number" value="1" min="1" style="margin-bottom:0">
-      </div>
-    </div>
-    <div class="loot-field-label">備註（選填）</div>
-    <input class="loot-field" id="editDbNote" placeholder="例：+1 武器…">
-    <div class="edit-modal-footer">
-      <button class="btn btn-gold" onclick="saveEditLoot()">💾 儲存修改</button>
-      <button class="btn btn-red" onclick="document.getElementById('editLootModalOverlay').classList.remove('show')">取消</button>
-    </div>
   </div>
 </div>
 
@@ -1921,40 +1809,17 @@ function addMemo(type) {
     <div class="memo-body">
       <textarea class="memo-textarea" placeholder="在此記錄內容、提示玩家的話、事件描述…" rows="4"></textarea>
     </div>
-    <div class="memo-resize-bar" onmousedown="startMemoResize(event, ${id})"></div>
     <div class="memo-footer">
-      ${type === 'event' ? `<input class="memo-time-input" type="text" placeholder="觸發時機 / 回合 / 時間…">` : `<span style="flex:1;color:var(--text-muted);font-size:11px;">拖拽中間橫條可調整高度</span>`}
+      ${type === 'event' ? `<input class="memo-time-input" type="text" placeholder="觸發時機 / 回合 / 時間…">` : `<span style="flex:1;color:var(--text-muted);font-size:11px;">點選文字即可編輯</span>`}
       <button class="memo-ping-btn" onclick="pingMemo(${id})">🔔 提示玩家</button>
     </div>
   `;
   grid.prepend(card);
-  markDirty();
-}
-
-// 備忘錄高度拖曳調整
-function startMemoResize(e, id) {
-  e.preventDefault();
-  const card = document.getElementById('memo-' + id);
-  const ta = card.querySelector('.memo-textarea');
-  const startY = e.clientY;
-  const startH = ta.offsetHeight;
-
-  function onMove(ev) {
-    const newH = Math.max(60, Math.min(600, startH + (ev.clientY - startY)));
-    ta.style.height = newH + 'px';
-    ta.style.minHeight = newH + 'px';
-  }
-  function onUp() {
-    document.removeEventListener('mousemove', onMove);
-    document.removeEventListener('mouseup', onUp);
-  }
-  document.addEventListener('mousemove', onMove);
-  document.addEventListener('mouseup', onUp);
 }
 
 function deleteMemo(id) {
   const el = document.getElementById('memo-' + id);
-  if (el) { el.remove(); markDirty(); }
+  if (el) el.remove();
 }
 
 function pingMemo(id) {
@@ -1980,7 +1845,7 @@ function closeAlert(e) {
 }
 
 // ════════════════════════════════════════
-// ENTITY (NPC / MONSTER) - 含圖片上傳
+// ENTITY (NPC / MONSTER)
 // ════════════════════════════════════════
 let entityId = 0;
 
@@ -2014,39 +1879,33 @@ function addEntity(type) {
 
   card.innerHTML = `
     <div class="entity-header" onclick="toggleEntity(${id})">
-      <div class="entity-img-wrap" onclick="event.stopPropagation();triggerImgUpload(${id})" title="點擊上傳圖片">
-        <img id="entity-img-${id}" src="" style="display:none">
-        <div class="entity-img-placeholder" id="entity-img-ph-${id}">
-          ${type === 'ally' ? '🛡' : type === 'enemy' ? '⚔' : '💀'}
-        </div>
-        <div class="entity-img-overlay">📷</div>
-      </div>
-      <input type="file" accept="image/*" class="entity-img-input" id="entity-img-file-${id}" onchange="loadEntityImg(${id}, this)">
       <span class="entity-type-dot ${dotClass}"></span>
-      <input class="entity-name-input" placeholder="名稱…" onclick="event.stopPropagation()" oninput="markDirty()">
+      <input class="entity-name-input" placeholder="名稱…" onclick="event.stopPropagation()">
       <span class="entity-toggle" id="toggle-${id}">▼</span>
     </div>
     <div class="entity-body" id="body-${id}">
 
+      <!-- 生命值 & 護甲數值列 -->
       <div class="vital-stats-grid">
         <div class="vital-stat-box vital-hp">
           <div class="vital-stat-label">❤️ 生命值 HP</div>
-          <input class="vital-stat-input" type="number" placeholder="0" min="0" id="hpcur-${id}" oninput="updateHP(${id});markDirty()">
+          <input class="vital-stat-input" type="number" placeholder="0" min="0" id="hpcur-${id}" oninput="updateHP(${id})">
         </div>
         <div class="vital-stat-box vital-shield">
           <div class="vital-stat-label">🔵 護盾值</div>
-          <input class="vital-stat-input" type="number" placeholder="0" min="0" id="hpmax-${id}" oninput="updateHP(${id});markDirty()">
+          <input class="vital-stat-input" type="number" placeholder="0" min="0" id="hpmax-${id}" oninput="updateHP(${id})">
         </div>
         <div class="vital-stat-box vital-magic">
           <div class="vital-stat-label">✨ 魔法護甲</div>
-          <input class="vital-stat-input" type="number" placeholder="0" min="0" oninput="markDirty()">
+          <input class="vital-stat-input" type="number" placeholder="0" min="0">
         </div>
         <div class="vital-stat-box vital-armor">
           <div class="vital-stat-label">🛡 物理護甲</div>
-          <input class="vital-stat-input" type="number" placeholder="0" min="0" oninput="markDirty()">
+          <input class="vital-stat-input" type="number" placeholder="0" min="0">
         </div>
       </div>
 
+      <!-- HP BAR -->
       <div class="hp-section">
         <div class="hp-row">
           <span class="hp-label">HP</span>
@@ -2059,62 +1918,71 @@ function addEntity(type) {
         </div>
       </div>
 
+      <!-- STATS -->
       <div class="stats-grid">${statBoxes}</div>
 
+      <!-- FIELDS -->
       <div class="field-grid">
         <div>
           <div class="field-label">👁 被動感知</div>
-          <input class="field-input" type="number" placeholder="10" oninput="markDirty()">
+          <input class="field-input" type="number" placeholder="10">
         </div>
         <div>
           <div class="field-label">⚡ 先攻加值</div>
-          <input class="field-input" type="number" placeholder="0" oninput="markDirty()">
+          <input class="field-input" type="number" placeholder="0">
         </div>
+
         <div class="field-full">
           <div class="field-label">🌟 被動能力 / 特性</div>
-          <textarea class="field-textarea" placeholder="例：暗視覺 60尺、魔法抗性…" oninput="markDirty()"></textarea>
+          <textarea class="field-textarea" placeholder="例：暗視覺 60尺、魔法抗性…"></textarea>
         </div>
+
         <div class="field-full">
           <div class="field-label">⚔ 普通攻擊</div>
-          <textarea class="field-textarea" placeholder="例：長劍 +5 命中，1d8+3 斬擊傷害…" oninput="markDirty()"></textarea>
+          <textarea class="field-textarea" placeholder="例：長劍 +5 命中，1d8+3 斬擊傷害…"></textarea>
         </div>
+
         <div class="field-full">
           <div class="field-label">✨ 主要技能 / 法術</div>
-          <textarea class="field-textarea tall" placeholder="例：火球術 (DC15)，60尺，8d6 火焰，半傷豁免…" oninput="markDirty()"></textarea>
+          <textarea class="field-textarea tall" placeholder="例：火球術 (DC15)，60尺，8d6 火焰，半傷豁免…"></textarea>
         </div>
+
         <div>
           <div class="field-label">➕ 附贈動作</div>
-          <textarea class="field-textarea tall" placeholder="附贈動作…" oninput="markDirty()"></textarea>
+          <textarea class="field-textarea tall" placeholder="附贈動作…"></textarea>
         </div>
         <div>
           <div class="field-label">⚡ 反應</div>
-          <textarea class="field-textarea tall" placeholder="反應技能…" oninput="markDirty()"></textarea>
+          <textarea class="field-textarea tall" placeholder="反應技能…"></textarea>
         </div>
+
         <div class="field-full">
           <div class="field-label">⭐ 特殊備註</div>
-          <textarea class="field-textarea" placeholder="弱點、免疫、傳奇動作、圖騰效果…" oninput="markDirty()"></textarea>
+          <textarea class="field-textarea" placeholder="弱點、免疫、傳奇動作、圖騰效果…"></textarea>
         </div>
+
         <div class="field-full">
           <div class="field-label">📖 簡介 / 背景</div>
-          <textarea class="field-textarea tall" placeholder="角色背景、個性、動機、與玩家的關係…" oninput="markDirty()"></textarea>
+          <textarea class="field-textarea tall" placeholder="角色背景、個性、動機、與玩家的關係…"></textarea>
         </div>
       </div>
 
+      <!-- 掉落物 -->
       <div class="loot-drop-section">
         <div class="loot-drop-header">💰 掉落物</div>
         <div class="loot-drop-grid">
           <div class="vital-stat-box">
             <div class="vital-stat-label">🪙 金幣 (GP)</div>
-            <input class="vital-stat-input" type="text" placeholder="0" oninput="markDirty()">
+            <input class="vital-stat-input" type="text" placeholder="0">
           </div>
           <div class="vital-stat-box">
             <div class="vital-stat-label">⭐ 經驗值 (EXP)</div>
-            <input class="vital-stat-input" type="text" placeholder="0" oninput="markDirty()">
+            <input class="vital-stat-input" type="text" placeholder="0">
           </div>
         </div>
         <div style="margin-top:10px">
           <div class="field-label">📦 掉落物品</div>
-          <textarea class="field-textarea tall" placeholder="例：魔法短劍（+1）、治療藥水 ×2…" oninput="markDirty()"></textarea>
+          <textarea class="field-textarea tall" placeholder="例：魔法短劍（+1）、治療藥水 ×2、古代羊皮紙…"></textarea>
         </div>
       </div>
 
@@ -2126,28 +1994,6 @@ function addEntity(type) {
 
   container.prepend(card);
   toggleEntity(id);
-  markDirty();
-}
-
-// 圖片上傳
-function triggerImgUpload(id) {
-  document.getElementById('entity-img-file-' + id).click();
-}
-
-function loadEntityImg(id, input) {
-  if (!input.files || !input.files[0]) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const img = document.getElementById('entity-img-' + id);
-    const ph = document.getElementById('entity-img-ph-' + id);
-    img.src = e.target.result;
-    img.style.display = 'block';
-    if (ph) ph.style.display = 'none';
-    // store in data attribute for save/restore
-    document.getElementById('entity-' + id).dataset.imgSrc = e.target.result;
-    markDirty();
-  };
-  reader.readAsDataURL(input.files[0]);
 }
 
 function toggleEntity(id) {
@@ -2159,17 +2005,16 @@ function toggleEntity(id) {
 
 function deleteEntity(id) {
   const el = document.getElementById('entity-' + id);
-  if (el) { el.remove(); markDirty(); }
+  if (el) el.remove();
 }
 
 function updateMod(input) {
-  const parts = input.id.split('-');
+  const parts = input.id.split('-'); // stat-{id}-{ABBR}
   const id = parts[1];
   const abbr = parts[2];
   const mod = getMod(input.value);
   const modEl = document.getElementById(`mod-${id}-${abbr}`);
   if (modEl) modEl.textContent = mod;
-  markDirty();
 }
 
 function updateHP(id) {
@@ -2191,7 +2036,6 @@ function adjHP(id, dir) {
   cur = Math.min(maxVal, Math.max(0, cur + dir * delta));
   curEl.value = cur;
   updateHP(id);
-  markDirty();
 }
 
 function filterEntities(type, query) {
@@ -2203,34 +2047,31 @@ function filterEntities(type, query) {
 }
 
 // ════════════════════════════════════════
-// CONDITIONS - DnD 2024 完整版
+// CONDITIONS
 // ════════════════════════════════════════
 const defaultConditions = [
-  { icon:'🦷', name:'昏盲 Blinded', effect:'• 無法看見，自動失敗任何需要視覺的能力檢定。\n• 昏盲生物對攻擊擲骰有劣勢。\n• 對昏盲生物的攻擊擲骰有優勢。' },
-  { icon:'😱', name:'魅惑 Charmed', effect:'• 被魅惑者無法對施法者發動攻擊，或針對施法者施放有害效果。\n• 施法者在對被魅惑者進行任何社交技能檢定時有優勢。\n• 魅惑狀態解除後，若目標知道自己曾被魅惑，通常會對施法者懷有敵意。' },
-  { icon:'😶', name:'耳聾 Deafened', effect:'• 無法聽到任何聲音。\n• 自動失敗任何需要聽覺的能力檢定。\n• 不受依靠聽覺的感知類法術或能力影響。' },
-  { icon:'😵', name:'眩暈 Dazed（2024）', effect:'• 每回合開始時只能使用以下其中之一：動作、附贈動作、反應。\n• 速度減半。\n• 無法集中（Concentration）於法術。\n• ✦ D&D 2024 新增官方狀態。' },
-  { icon:'😱', name:'恐懼 Frightened', effect:'• 當恐懼來源在視線範圍內時，恐懼生物的能力檢定與攻擊擲骰有劣勢。\n• 恐懼生物無法主動進入離恐懼來源更近的空間（但可被迫移動進入）。' },
-  { icon:'🤝', name:'擒抱 Grappled', effect:'• 移動速度變為 0，且無法從加速效果中獲益。\n• 擒抱生物只能在同一空間施放不需要移動的攻擊。\n• 若擒抱者處於失能狀態或被移至擒抱範圍外，擒抱解除。\n• 被擒抱者可以用動作進行力量（運動）或敏捷（體操）技能檢定，對抗擒抱者的力量（運動）嘗試脫出。' },
-  { icon:'🚫', name:'失能 Incapacitated', effect:'• 無法採取任何行動（Action）或反應（Reaction）。\n• 不能集中（Concentration）於法術。\n• 無法進行機會攻擊（Opportunity Attack）。' },
-  { icon:'👻', name:'隱形 Invisible', effect:'• 無法被一般視覺感知（依然可能被非視覺感知發現）。\n• 隱形生物被視為「難以發現（heavily obscured）」。\n• 隱形生物的攻擊擲骰有優勢；對隱形生物的攻擊擲骰有劣勢（若不知其位置，需先猜測位置）。\n• 隱形生物在涉及藏匿的技能檢定時有優勢。' },
-  { icon:'🧨', name:'癱瘓 Paralyzed', effect:'• 處於失能（Incapacitated）狀態。\n• 無法移動或說話。\n• 自動失敗力量與敏捷豁免。\n• 對癱瘓生物的攻擊擲骰有優勢。\n• 在距離 5 尺以內命中的攻擊，自動視為致命一擊（Critical Hit）。' },
-  { icon:'🪨', name:'石化 Petrified', effect:'• 目標及其攜帶的所有非魔法物品被變成固體（通常是石頭），重量增加至十倍。\n• 處於失能（Incapacitated）狀態，無法移動或說話，無法對周遭環境作出反應。\n• 攻擊擲骰對石化目標有優勢。\n• 自動失敗力量與敏捷豁免。\n• 對所有傷害有抗性。\n• 免疫毒素（Poison）與疾病，但原本已存在的毒素與疾病暫時凍結（不再惡化）。' },
-  { icon:'☠️', name:'中毒 Poisoned', effect:'• 攻擊擲骰與能力檢定有劣勢。\n• 部分毒素會對移動速度、HP 或豁免另有額外效果（依具體毒素描述）。' },
-  { icon:'🛌', name:'倒地 Prone', effect:'• 唯一的移動方式是爬行（消耗雙倍移動力），或站立起身（消耗一半最大移動力，若移動力足夠）。\n• 倒地生物的近戰攻擊擲骰有劣勢。\n• 對倒地目標的近戰攻擊擲骰有優勢；若攻擊者距目標 5 尺以上，則為劣勢（遠程攻擊）。' },
-  { icon:'⛓', name:'束縛 Restrained', effect:'• 移動速度變為 0，且無法從加速效果中獲益。\n• 束縛生物的攻擊擲骰有劣勢。\n• 對束縛目標的攻擊擲骰有優勢。\n• 束縛目標的敏捷豁免有劣勢。' },
-  { icon:'💤', name:'昏迷 Stunned', effect:'• 處於失能（Incapacitated）狀態。\n• 無法移動。\n• 只能以緩慢、語意不清的方式說話。\n• 自動失敗力量與敏捷豁免。\n• 對昏迷目標的攻擊擲骰有優勢。' },
-  { icon:'💀', name:'無意識 Unconscious', effect:'• 處於失能（Incapacitated）狀態。\n• 無法移動或說話，對周遭環境毫無意識。\n• 自動失敗力量與敏捷豁免。\n• 對無意識目標的攻擊擲骰有優勢。\n• 在 5 尺以內命中的攻擊，自動視為致命一擊（Critical Hit）。\n• 自動獲得倒地（Prone）狀態。' },
-  { icon:'💸', name:'精疲力竭 Exhaustion（2024）', effect:'• D&D 2024 改版：使用「1～10層疲勞等級」機制。\n• 每一層疲勞使所有 d20 擲骰（攻擊/豁免/技能）-2。\n• 疲勞等級 10 時死亡。\n• 長休後移除 1 層疲勞。\n• ✦ 取代舊版的「六種效果表格」機制。' },
-  { icon:'🔥', name:'燃燒 On Fire（擴充）', effect:'• 每回合受到 1d6 火焰傷害（依桌規可調整）。\n• 可用一個動作（Action）在地上打滾嘗試撲滅（DC10 敏捷豁免，或友方幫助）。\n• ※ 非核心規則，依 DM 桌規調整。' },
+  { icon:'🦷', name:'昏盲 Blinded', effect:'• 無法看見，自動失敗需要視覺的能力檢定。\n• 對昏盲狀態的生物進行攻擊擲骰有利（優勢）。\n• 昏盲狀態的生物進行攻擊擲骰有劣勢。' },
+  { icon:'😱', name:'魅惑 Charmed', effect:'• 被魅惑者無法對魅惑來源發動攻擊或施放傷害法術。\n• 魅惑來源在需要社交的能力檢定中對被魅惑者有優勢。' },
+  { icon:'😶', name:'耳聾 Deafened', effect:'• 無法聽到任何聲音，自動失敗所有需要聽覺的能力檢定。' },
+  { icon:'😱', name:'恐懼 Frightened', effect:'• 在恐懼來源視線範圍內，能力檢定與攻擊擲骰有劣勢。\n• 無法主動接近恐懼來源所在的空間。' },
+  { icon:'🤝', name:'擒抱 Grappled', effect:'• 移動速度變為 0，且無法從速度加成中獲益。\n• 如果擒抱者失能，此狀態立即解除。' },
+  { icon:'🚫', name:'失能 Incapacitated', effect:'• 無法採取任何動作或反應。' },
+  { icon:'👻', name:'隱形 Invisible', effect:'• 若無特殊感知，無法被看見。對隱形生物的攻擊有劣勢。\n• 隱形生物的攻擊有優勢。' },
+  { icon:'🧨', name:'癱瘓 Paralyzed', effect:'• 失能（無行動/反應），且無法移動或說話。\n• 近身命中自動視為致命一擊。\n• 自動失敗力量與敏捷豁免。' },
+  { icon:'🪨', name:'石化 Petrified', effect:'• 變成固體，重量增加十倍，失能、移動歸零。\n• 對所有傷害有抗性；免疫毒素和心靈狀態。\n• 自動失敗力量與敏捷豁免。' },
+  { icon:'☠️', name:'中毒 Poisoned', effect:'• 攻擊擲骰與能力檢定有劣勢。' },
+  { icon:'🛌', name:'倒地 Prone', effect:'• 只能緩慢爬行移動（耗費雙倍移動力）。\n• 近戰攻擊有劣勢；5尺內近戰攻擊者有優勢，遠程有劣勢。\n• 起身需花費一半移動力。' },
+  { icon:'⛓', name:'束縛 Restrained', effect:'• 移動速度為 0。\n• 攻擊擲骰有劣勢；對束縛者的攻擊有優勢。\n• 敏捷豁免有劣勢。' },
+  { icon:'💤', name:'昏迷 Stunned', effect:'• 失能，無法移動，只能緩慢說話。\n• 自動失敗力量與敏捷豁免。\n• 對昏迷者的攻擊有優勢。' },
+  { icon:'💀', name:'無意識 Unconscious', effect:'• 失能、無法移動說話，對周遭無感知。\n• 自動失敗力量與敏捷豁免，近身命中為致命一擊。\n• 跌落倒地狀態。' },
+  { icon:'🔥', name:'燃燒 On Fire（擴充）', effect:'• 每回合受到 1d6 火焰傷害。\n• 可用一個行動在地上打滾撲滅（DC10 敏捷豁免）。\n• ※ 非官方，依桌規調整。' },
+  { icon:'🌀', name:'眩暈 Dazed（擴充）', effect:'• 每回合只能使用動作、附贈動作、反應其中之一（非官方狀態，One D&D 提案）。\n• ※ 依版本與桌規自行調整。' },
 ];
 
 let condId = 0;
 
 function buildConditions() {
   const grid = document.getElementById('cond-grid');
-  grid.innerHTML = '';
-  condId = 0;
   defaultConditions.forEach(c => {
     grid.appendChild(createCondCard(c.icon, c.name, c.effect));
   });
@@ -2243,12 +2084,12 @@ function createCondCard(icon, name, effect) {
   div.id = 'cond-' + id;
   div.innerHTML = `
     <div class="cond-header">
-      <input class="cond-icon" value="${escH(icon)}" style="width:36px;background:none;border:none;outline:none;font-size:20px;text-align:center;cursor:text" oninput="markDirty()">
-      <input class="cond-name-input" value="${escH(name)}" oninput="markDirty()">
-      <button class="btn-icon" onclick="document.getElementById('cond-${id}').remove();markDirty()" title="刪除">✕</button>
+      <span class="cond-icon">${icon}</span>
+      <input class="cond-name-input" value="${name}">
+      <button class="btn-icon" onclick="document.getElementById('cond-${id}').remove()" title="刪除">✕</button>
     </div>
     <div class="cond-body">
-      <textarea class="cond-effect-textarea" rows="6" oninput="markDirty()">${escH(effect)}</textarea>
+      <textarea class="cond-effect-textarea" rows="5">${effect}</textarea>
     </div>
   `;
   return div;
@@ -2256,45 +2097,47 @@ function createCondCard(icon, name, effect) {
 
 function addCondition() {
   const grid = document.getElementById('cond-grid');
-  const card = createCondCard('✨','新增狀態','在此輸入效果說明…');
-  grid.prepend(card);
-  card.querySelector('.cond-name-input').focus();
-  markDirty();
+  grid.appendChild(createCondCard('✨','新增狀態','在此輸入效果說明…'));
 }
 
-// ════════════════════════════════════════
-// GOOGLE SHEETS SYNC + 自動同步
-// ════════════════════════════════════════
-const CELL_LIMIT = 45000;
-let _autoSyncEnabled = false;
-let _isDirty = false;
-let _autoSyncTimer = null;
-let _lastSyncHash = '';
 
+// ════════════════════════════════════════
+// GOOGLE SHEETS SYNC
+// ════════════════════════════════════════
+
+const CELL_LIMIT = 45000; // 安全上限（Google Sheets 單格最大 50,000 字元）
+
+// ── Apps Script 程式碼模板（doGet + JSONP，解決 CORS）──
 const APPS_SCRIPT_CODE = `// ★ 請將下方 SHEET_ID 替換為你的試算表 ID ★
 const SHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
 const SHEET_NAME = 'DnD_Dashboard';
 
+// 使用 doGet + JSONP 解決跨域 (CORS) 問題
 function doGet(e) {
   try {
     const cb   = e.parameter.callback || 'cb';
     const action = e.parameter.action;
     const sheet = getOrCreateSheet();
 
+    // ── 儲存 ──
     if (action === 'save') {
       const totalChunks = parseInt(e.parameter.total) || 1;
       const idx         = parseInt(e.parameter.idx)   || 0;
       const chunk       = e.parameter.chunk || '';
+
+      // 第一個 chunk 時先清空、寫 header
       if (idx === 0) {
         sheet.clearContents();
         sheet.getRange(1, 1).setValue('DnD Dashboard Backup');
         sheet.getRange(1, 2).setValue(new Date().toISOString());
         sheet.getRange(1, 3).setValue('chunks:' + totalChunks);
       }
+      // 資料從第 2 列開始，逐欄寫入
       sheet.getRange(2, idx + 1).setValue(chunk);
       return jsonp(cb, { status: 'ok', idx, total: totalChunks });
     }
 
+    // ── 讀取 ──
     if (action === 'load') {
       const lastCol = sheet.getLastColumn();
       if (lastCol < 1) return jsonp(cb, { status: 'empty' });
@@ -2322,153 +2165,65 @@ function getOrCreateSheet() {
   return sheet;
 }
 
+// JSONP 回應：callback({...})
 function jsonp(cb, obj) {
   const body = cb + '(' + JSON.stringify(obj) + ')';
   return ContentService.createTextOutput(body)
     .setMimeType(ContentService.MimeType.JAVASCRIPT);
 }`;
 
-// 標記資料已變更
-function markDirty() {
-  _isDirty = true;
-  if (_autoSyncEnabled) {
-    resetAutoSyncTimer();
-  }
-}
-
-// 自動同步計時器
-function resetAutoSyncTimer() {
-  if (_autoSyncTimer) clearTimeout(_autoSyncTimer);
-  _autoSyncTimer = setTimeout(() => {
-    const url = document.getElementById('sheetUrlInput').value.trim();
-    if (url && _isDirty) {
-      autoSyncToSheet();
-    }
-  }, 30000); // 30秒後自動同步
-}
-
-async function autoSyncToSheet() {
-  const url = document.getElementById('sheetUrlInput').value.trim();
-  if (!url) return;
-
-  try {
-    const data = collectDashboardData();
-    const jsonStr = JSON.stringify(data);
-
-    // 若資料未變，不重複同步
-    if (jsonStr === _lastSyncHash) { _isDirty = false; return; }
-
-    setAutosyncState('syncing', '同步中…');
-    const chunks = splitChunks(jsonStr);
-    for (let i = 0; i < chunks.length; i++) {
-      const res = await jsonpRequest(url, { action:'save', idx:i, total:chunks.length, chunk:chunks[i] });
-      if (res.status !== 'ok') throw new Error(res.msg || '儲存失敗');
-    }
-    _lastSyncHash = jsonStr;
-    _isDirty = false;
-    const t = new Date().toLocaleTimeString('zh-TW', {hour:'2-digit',minute:'2-digit'});
-    setAutosyncState('connected', `已同步 ${t}`);
-    setSyncStatus('ok', `✓ 自動儲存 ${t}`);
-  } catch(e) {
-    setAutosyncState('error', '同步失敗');
-    setSyncStatus('err', '✗ ' + e.message);
-  }
-}
-
-function setAutosyncState(state, label) {
-  const el = document.getElementById('autosyncIndicator');
-  el.className = 'autosync-indicator ' + state;
-  document.getElementById('autosyncLabel').textContent = label;
-}
-
-function toggleAutoSync() {
-  _autoSyncEnabled = !_autoSyncEnabled;
-  const toggle = document.getElementById('autosyncToggle');
-  toggle.classList.toggle('on', _autoSyncEnabled);
-  localStorage.setItem('dnd_autosync', _autoSyncEnabled ? '1' : '0');
-
-  if (_autoSyncEnabled) {
-    const url = document.getElementById('sheetUrlInput').value.trim();
-    if (url) {
-      setAutosyncState('connected', '自動同步開啟');
-    } else {
-      setAutosyncState('error', '請輸入 URL');
-    }
-    if (_isDirty) resetAutoSyncTimer();
-  } else {
-    setAutosyncState('idle', '自動同步關閉');
-    if (_autoSyncTimer) clearTimeout(_autoSyncTimer);
-  }
-}
-
-function onSyncUrlChange() {
-  const url = document.getElementById('sheetUrlInput').value.trim();
-  localStorage.setItem('dnd_sheet_url', url);
-  const modalInput = document.getElementById('modalSyncUrl');
-  if (modalInput) modalInput.value = url;
-  if (url && _autoSyncEnabled) {
-    setAutosyncState('connected', '已連線');
-  } else if (!url) {
-    setAutosyncState('idle', '未連線');
-  }
-}
-
-function syncModalUrlToBar() {
-  const url = document.getElementById('modalSyncUrl').value.trim();
-  document.getElementById('sheetUrlInput').value = url;
-  localStorage.setItem('dnd_sheet_url', url);
-  onSyncUrlChange();
-}
-
-// 初始化
+// ── 初始化 ──
 document.addEventListener('DOMContentLoaded', () => {
-  const savedUrl = localStorage.getItem('dnd_sheet_url') || '';
-  if (savedUrl) {
-    document.getElementById('sheetUrlInput').value = savedUrl;
-    const modalInput = document.getElementById('modalSyncUrl');
-    if (modalInput) modalInput.value = savedUrl;
-  }
+  const savedUrl = localStorage.getItem('dnd_sheet_url');
+  if (savedUrl) document.getElementById('sheetUrlInput').value = savedUrl;
   document.getElementById('appsScriptCode').value = APPS_SCRIPT_CODE;
-
-  const autoSync = localStorage.getItem('dnd_autosync') === '1';
-  if (autoSync) {
-    _autoSyncEnabled = true;
-    document.getElementById('autosyncToggle').classList.add('on');
-    if (savedUrl) setAutosyncState('connected', '自動同步開啟');
-  }
 });
 
+function saveSyncUrl() {
+  const url = document.getElementById('sheetUrlInput').value.trim();
+  localStorage.setItem('dnd_sheet_url', url);
+}
+
+// ── 分割大字串為多個 chunk ──
 function splitChunks(str) {
   const chunks = [];
   let pos = 0;
-  while (pos < str.length) { chunks.push(str.slice(pos, pos + CELL_LIMIT)); pos += CELL_LIMIT; }
+  while (pos < str.length) {
+    chunks.push(str.slice(pos, pos + CELL_LIMIT));
+    pos += CELL_LIMIT;
+  }
   return chunks.length ? chunks : [''];
 }
 
-function joinChunks(chunks) { return chunks.join(''); }
+// ── 合併 chunks ──
+function joinChunks(chunks) {
+  return chunks.join('');
+}
 
+// ── 收集目前 Dashboard 所有資料 ──
 function collectDashboardData() {
   const data = {
-    version: 3,
+    version: 2,
     savedAt: new Date().toISOString(),
     memos: [],
     entities: { ally: [], enemy: [], monster: [] },
     conditions: []
   };
 
+  // 備忘錄
   document.querySelectorAll('#memo-grid .memo-card').forEach(card => {
     const badge = card.querySelector('.memo-type-badge');
     const title = card.querySelector('.memo-title-input')?.value ?? '';
     const body = card.querySelector('.memo-textarea')?.value ?? '';
     const time = card.querySelector('.memo-time-input')?.value ?? '';
-    const taH = card.querySelector('.memo-textarea')?.style.height || '';
     data.memos.push({
       type: badge ? badge.textContent.trim() : '',
       badgeCls: badge ? [...badge.classList].find(c => c.startsWith('badge-')) : '',
-      title, body, time, taH
+      title, body, time
     });
   });
 
+  // NPC / 怪物
   ['ally','enemy','monster'].forEach(type => {
     document.querySelectorAll(`#list-${type} .entity-card`).forEach(card => {
       const idMatch = card.id.match(/entity-(\d+)/);
@@ -2485,15 +2240,15 @@ function collectDashboardData() {
         hpCur: document.getElementById(`hpcur-${eid}`)?.value ?? '0',
         hpMax: document.getElementById(`hpmax-${eid}`)?.value ?? '0',
         stats,
-        fields: fields.map(f => f.value),
-        imgSrc: card.dataset.imgSrc || ''
+        fields: fields.map(f => f.value)
       });
     });
   });
 
+  // 異常狀態
   document.querySelectorAll('#cond-grid .cond-card').forEach(card => {
     data.conditions.push({
-      icon: card.querySelector('.cond-icon')?.value ?? '',
+      icon: card.querySelector('.cond-icon')?.textContent ?? '',
       name: card.querySelector('.cond-name-input')?.value ?? '',
       effect: card.querySelector('.cond-effect-textarea')?.value ?? ''
     });
@@ -2502,81 +2257,103 @@ function collectDashboardData() {
   return data;
 }
 
+// ── 設定同步狀態顯示 ──
 function setSyncStatus(state, msg) {
   const el = document.getElementById('syncStatus');
   el.className = 'sync-status ' + state;
   el.textContent = msg;
 }
 
+// ── JSONP 請求工具（解決 CORS 問題）──
 function jsonpRequest(url, params) {
   return new Promise((resolve, reject) => {
     const cbName = '_gsync_' + Date.now() + '_' + Math.floor(Math.random()*10000);
     const timeout = setTimeout(() => {
-      delete window[cbName]; script.remove();
+      delete window[cbName];
+      script.remove();
       reject(new Error('請求逾時，請確認 URL 是否正確'));
     }, 15000);
 
     window[cbName] = function(data) {
-      clearTimeout(timeout); delete window[cbName]; script.remove(); resolve(data);
+      clearTimeout(timeout);
+      delete window[cbName];
+      script.remove();
+      resolve(data);
     };
 
     const qs = Object.entries({ ...params, callback: cbName })
-      .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&');
+      .map(([k,v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
+      .join('&');
 
     const script = document.createElement('script');
     script.src = url + '?' + qs;
     script.onerror = () => {
-      clearTimeout(timeout); delete window[cbName];
+      clearTimeout(timeout);
+      delete window[cbName];
       reject(new Error('Script 載入失敗，請確認 URL 是否正確且已部署'));
     };
     document.head.appendChild(script);
   });
 }
 
+// ── 儲存至 Google Sheet（逐欄傳送每個 chunk）──
 async function syncToSheet() {
   const url = document.getElementById('sheetUrlInput').value.trim();
   if (!url) { alert('請先貼上 Apps Script Web App URL！'); return; }
+
   setSyncStatus('syncing', '⟳ 收集資料…');
   try {
     const data = collectDashboardData();
     const jsonStr = JSON.stringify(data);
     const chunks = splitChunks(jsonStr);
+
     for (let i = 0; i < chunks.length; i++) {
       setSyncStatus('syncing', `⟳ 傳送 ${i+1}/${chunks.length} 欄…`);
-      const res = await jsonpRequest(url, { action:'save', idx:i, total:chunks.length, chunk:chunks[i] });
+      const res = await jsonpRequest(url, {
+        action: 'save',
+        idx: i,
+        total: chunks.length,
+        chunk: chunks[i]
+      });
       if (res.status !== 'ok') throw new Error(res.msg || '儲存失敗');
     }
-    _lastSyncHash = jsonStr; _isDirty = false;
-    const t = new Date().toLocaleString('zh-TW');
-    setSyncStatus('ok', `✓ 已儲存 (${chunks.length} 欄) ${t}`);
-    setAutosyncState('connected', `已同步`);
+
+    const savedAt = new Date().toLocaleString('zh-TW');
+    setSyncStatus('ok', `✓ 已儲存 (${chunks.length} 欄) ${savedAt}`);
   } catch(e) {
     setSyncStatus('err', '✗ ' + e.message);
-    setAutosyncState('error', '同步失敗');
   }
 }
 
+// ── 從 Google Sheet 讀取還原 ──
 async function loadFromSheet() {
   const url = document.getElementById('sheetUrlInput').value.trim();
   if (!url) { alert('請先貼上 Apps Script Web App URL！'); return; }
   if (!confirm('確定要從 Google Sheet 讀取資料？目前的資料將被覆蓋。')) return;
+
   setSyncStatus('syncing', '⟳ 讀取中…');
   try {
-    const res = await jsonpRequest(url, { action:'load' });
-    if (res.status === 'empty') { setSyncStatus('err', '⚠ Sheet 尚無資料'); return; }
+    const res = await jsonpRequest(url, { action: 'load' });
+
+    if (res.status === 'empty') {
+      setSyncStatus('err', '⚠ Sheet 尚無資料');
+      return;
+    }
     if (res.status !== 'ok') throw new Error(res.msg || '讀取失敗');
+
     const jsonStr = joinChunks(res.chunks);
     const data = JSON.parse(jsonStr);
     restoreDashboardData(data);
-    const t = new Date().toLocaleString('zh-TW');
-    setSyncStatus('ok', `✓ 已讀取 (${res.chunks.length} 欄) ${t}`);
-    _isDirty = false;
+    const savedAt = new Date().toLocaleString('zh-TW');
+    setSyncStatus('ok', `✓ 已讀取 (${res.chunks.length} 欄) ${savedAt}`);
   } catch(e) {
     setSyncStatus('err', '✗ ' + e.message);
   }
 }
 
+// ── 還原 Dashboard 資料 ──
 function restoreDashboardData(data) {
+  // 清除現有資料
   document.getElementById('memo-grid').innerHTML = '';
   document.getElementById('list-ally').innerHTML = '';
   document.getElementById('list-enemy').innerHTML = '';
@@ -2584,6 +2361,7 @@ function restoreDashboardData(data) {
   document.getElementById('cond-grid').innerHTML = '';
   memoId = 0; entityId = 0; condId = 0;
 
+  // 還原備忘錄
   (data.memos || []).forEach(m => {
     const id = ++memoId;
     const grid = document.getElementById('memo-grid');
@@ -2593,22 +2371,22 @@ function restoreDashboardData(data) {
     const isEvent = m.badgeCls === 'badge-event';
     card.innerHTML = `
       <div class="memo-card-header">
-        <span class="memo-type-badge ${m.badgeCls}">${escH(m.type)}</span>
+        <span class="memo-type-badge ${m.badgeCls}">${m.type}</span>
         <input class="memo-title-input" placeholder="標題…" value="${escH(m.title)}">
         <button class="btn-icon" onclick="deleteMemo(${id})" title="刪除">✕</button>
       </div>
       <div class="memo-body">
-        <textarea class="memo-textarea" rows="4" ${m.taH ? `style="height:${m.taH};min-height:${m.taH}"` : ''}>${escH(m.body)}</textarea>
+        <textarea class="memo-textarea" rows="4">${escH(m.body)}</textarea>
       </div>
-      <div class="memo-resize-bar" onmousedown="startMemoResize(event, ${id})"></div>
       <div class="memo-footer">
-        ${isEvent ? `<input class="memo-time-input" type="text" placeholder="觸發時機…" value="${escH(m.time)}">` : `<span style="flex:1;color:var(--text-muted);font-size:11px;">拖拽中間橫條可調整高度</span>`}
+        ${isEvent ? `<input class="memo-time-input" type="text" placeholder="觸發時機…" value="${escH(m.time)}">` : `<span style="flex:1;color:var(--text-muted);font-size:11px;">點選文字即可編輯</span>`}
         <button class="memo-ping-btn" onclick="pingMemo(${id})">🔔 提示玩家</button>
       </div>
     `;
     grid.appendChild(card);
   });
 
+  // 還原 entities
   ['ally','enemy','monster'].forEach(type => {
     (data.entities?.[type] || []).forEach(e => {
       addEntity(type);
@@ -2628,31 +2406,23 @@ function restoreDashboardData(data) {
       });
       const fields = [...card.querySelectorAll('.field-input, .field-textarea')];
       (e.fields || []).forEach((val, i) => { if (fields[i]) fields[i].value = val; });
-      // 恢復圖片
-      if (e.imgSrc) {
-        const img = document.getElementById('entity-img-' + eid);
-        const ph = document.getElementById('entity-img-ph-' + eid);
-        if (img) { img.src = e.imgSrc; img.style.display = 'block'; }
-        if (ph) ph.style.display = 'none';
-        card.dataset.imgSrc = e.imgSrc;
-      }
     });
   });
 
+  // 還原異常狀態
   (data.conditions || []).forEach(c => {
     const grid = document.getElementById('cond-grid');
     grid.appendChild(createCondCard(c.icon, c.name, c.effect));
   });
 }
 
+function escH(str) {
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── 說明 Modal ──
 function showSyncHelp() {
   document.getElementById('appsScriptCode').value = APPS_SCRIPT_CODE;
-  const url = document.getElementById('sheetUrlInput').value;
-  const modalInput = document.getElementById('modalSyncUrl');
-  if (modalInput) modalInput.value = url;
-  const autoSync = localStorage.getItem('dnd_autosync') === '1';
-  const toggle = document.getElementById('autosyncToggle');
-  if (toggle) toggle.classList.toggle('on', autoSync);
   document.getElementById('syncModalOverlay').classList.add('show');
 }
 
@@ -2668,36 +2438,34 @@ function copyAppsScript() {
   });
 }
 
+// 在頁面載入時初始化 URL
 window.addEventListener('load', () => {
   const savedUrl = localStorage.getItem('dnd_sheet_url');
-  if (savedUrl) {
-    document.getElementById('sheetUrlInput').value = savedUrl;
-    const mi = document.getElementById('modalSyncUrl');
-    if (mi) mi.value = savedUrl;
-  }
+  if (savedUrl) document.getElementById('sheetUrlInput').value = savedUrl;
   document.getElementById('appsScriptCode').value = APPS_SCRIPT_CODE;
-  const autoSync = localStorage.getItem('dnd_autosync') === '1';
-  if (autoSync && savedUrl) setAutosyncState('connected', '自動同步開啟');
 });
+
 
 // ════════════════════════════════════════
 // LOOT GENERATOR
 // ════════════════════════════════════════
+
 const LOOT_DB_KEY   = 'dnd_loot_db_v1';
 const LOOT_HIST_KEY = 'dnd_loot_hist_v1';
 
 const RARITY_META = {
-  common:    { label:'普通',   labelEn:'NORMAL',    rank:1, badgeCls:'rarity-common',    color:'#d0d0d0', dot:'⬜', rowCls:'loot-item-common' },
-  uncommon:  { label:'魔法',   labelEn:'MAGIC',     rank:2, badgeCls:'rarity-uncommon',  color:'#4cdb6e', dot:'🟩', rowCls:'loot-item-uncommon' },
-  rare:      { label:'稀有',   labelEn:'RARE',      rank:3, badgeCls:'rarity-rare',      color:'#7ac8ff', dot:'🟦', rowCls:'loot-item-rare' },
-  epic:      { label:'獨特',   labelEn:'UNIQUE',    rank:4, badgeCls:'rarity-epic',      color:'#d090ff', dot:'🟪', rowCls:'loot-item-epic' },
-  legendary: { label:'傳說',   labelEn:'LEGENDARY', rank:5, badgeCls:'rarity-legendary', color:'#ffcc44', dot:'🟥', rowCls:'loot-item-legendary' },
+  common:    { label: '普通',  labelEn: 'NORMAL',    rank: 1, badgeCls: 'rarity-common',    color: '#d0d0d0', dot: '⬜' },
+  uncommon:  { label: '魔法',  labelEn: 'MAGIC',     rank: 2, badgeCls: 'rarity-uncommon',  color: '#4cdb6e', dot: '🟩' },
+  rare:      { label: '稀有',  labelEn: 'RARE',      rank: 3, badgeCls: 'rarity-rare',      color: '#5aadff', dot: '🟦' },
+  epic:      { label: '獨特',  labelEn: 'UNIQUE',    rank: 4, badgeCls: 'rarity-epic',      color: '#c47fff', dot: '🟪' },
+  legendary: { label: '傳說',  labelEn: 'LEGENDARY', rank: 5, badgeCls: 'rarity-legendary', color: '#ff5555', dot: '🟥' },
 };
 
-let _lootDB      = [];
-let _lootHistory = [];
-let _lootSource  = 'all';
+let _lootDB      = [];   // 掉落資料庫
+let _lootHistory = [];   // 歷史紀錄
+let _lootSource  = 'all'; // 當前來源篩選
 
+// ── 讀取 / 儲存 ──────────────────────────────
 function loadLootDB() {
   try { _lootDB = JSON.parse(localStorage.getItem(LOOT_DB_KEY) || '[]'); } catch(e) { _lootDB = []; }
   try { _lootHistory = JSON.parse(localStorage.getItem(LOOT_HIST_KEY) || '[]'); } catch(e) { _lootHistory = []; }
@@ -2715,23 +2483,24 @@ function saveLootDB() {
 
 function defaultLootDB() {
   return [
-    { id:uid(), icon:'💰', name:'金幣',       source:'寶箱',     rarity:'common',    minQty:10, maxQty:100, note:'' },
-    { id:uid(), icon:'🧪', name:'回血藥水',   source:'寶箱',     rarity:'uncommon',  minQty:1,  maxQty:3,   note:'恢復 2d4+2 HP' },
-    { id:uid(), icon:'🧿', name:'魔力藥水',   source:'寶箱',     rarity:'uncommon',  minQty:1,  maxQty:2,   note:'恢復 1 法術位' },
-    { id:uid(), icon:'📜', name:'火球卷軸',   source:'寶箱',     rarity:'rare',      minQty:1,  maxQty:1,   note:'DC13，8d6 火焰' },
-    { id:uid(), icon:'📜', name:'傳送卷軸',   source:'寶箱',     rarity:'rare',      minQty:1,  maxQty:1,   note:'' },
-    { id:uid(), icon:'💎', name:'藍晶石',     source:'野外事件', rarity:'rare',      minQty:1,  maxQty:3,   note:'' },
-    { id:uid(), icon:'🗡', name:'精良短劍',   source:'BOSS',     rarity:'rare',      minQty:1,  maxQty:1,   note:'+1 魔法武器' },
-    { id:uid(), icon:'🛡', name:'護盾 +1',    source:'BOSS',     rarity:'epic',      minQty:1,  maxQty:1,   note:'' },
-    { id:uid(), icon:'💰', name:'大量金幣',   source:'野外事件', rarity:'common',    minQty:5,  maxQty:50,  note:'' },
-    { id:uid(), icon:'⚗', name:'毒藥瓶',     source:'野外事件', rarity:'uncommon',  minQty:1,  maxQty:2,   note:'DC14 體質豁免' },
-    { id:uid(), icon:'🌿', name:'藥草束',     source:'野外事件', rarity:'common',    minQty:1,  maxQty:4,   note:'' },
-    { id:uid(), icon:'🏺', name:'古代神器',   source:'BOSS',     rarity:'legendary', minQty:1,  maxQty:1,   note:'待 GM 決定效果' },
+    { id: uid(), icon:'💰', name:'金幣',       source:'寶箱',   rarity:'common',   minQty:10,  maxQty:100, weight:30, note:'' },
+    { id: uid(), icon:'🧪', name:'回血藥水',   source:'寶箱',   rarity:'uncommon', minQty:1,   maxQty:3,   weight:20, note:'恢復 2d4+2 HP' },
+    { id: uid(), icon:'🧿', name:'魔力藥水',   source:'寶箱',   rarity:'uncommon', minQty:1,   maxQty:2,   weight:15, note:'恢復 1 法術位' },
+    { id: uid(), icon:'📜', name:'火球卷軸',   source:'寶箱',   rarity:'rare',     minQty:1,   maxQty:1,   weight:8,  note:'DC13，8d6 火焰' },
+    { id: uid(), icon:'📜', name:'傳送卷軸',   source:'寶箱',   rarity:'rare',     minQty:1,   maxQty:1,   weight:6,  note:'' },
+    { id: uid(), icon:'💎', name:'藍晶石',     source:'野外事件', rarity:'rare',   minQty:1,   maxQty:3,   weight:10, note:'' },
+    { id: uid(), icon:'🗡', name:'精良短劍',   source:'BOSS',   rarity:'rare',     minQty:1,   maxQty:1,   weight:5,  note:'+1 魔法武器' },
+    { id: uid(), icon:'🛡', name:'護盾 +1',    source:'BOSS',   rarity:'epic',     minQty:1,   maxQty:1,   weight:3,  note:'' },
+    { id: uid(), icon:'💰', name:'大量金幣',   source:'野外事件', rarity:'common', minQty:5,   maxQty:50,  weight:25, note:'' },
+    { id: uid(), icon:'⚗', name:'毒藥瓶',     source:'野外事件', rarity:'uncommon',minQty:1,  maxQty:2,   weight:10, note:'DC14 體質豁免' },
+    { id: uid(), icon:'🌿', name:'藥草束',     source:'野外事件', rarity:'common', minQty:1,   maxQty:4,   weight:20, note:'' },
+    { id: uid(), icon:'🏺', name:'古代神器',   source:'BOSS',   rarity:'legendary',minQty:1,  maxQty:1,   weight:1,  note:'待 GM 決定效果' },
   ];
 }
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
 
+// ── 來源篩選 ──────────────────────────────────
 function rebuildSourceTabs() {
   const sources = ['all', ...[...new Set(_lootDB.map(e => e.source).filter(Boolean))]];
   const container = document.getElementById('lootSourceTabs');
@@ -2753,9 +2522,11 @@ function setLootSource(btn) {
   btn.classList.add('active');
 }
 
-// ── RARITY RATES ──
+// ════════════════════════════════════════
+// RARITY RATES SYSTEM
+// ════════════════════════════════════════
 const LOOT_RATES_KEY = 'dnd_loot_rates_v1';
-const DEFAULT_RATES = { common:60, uncommon:25, rare:10, epic:4, legendary:1 };
+const DEFAULT_RATES = { common: 60, uncommon: 25, rare: 10, epic: 4, legendary: 1 };
 let _lootRates = { ...DEFAULT_RATES };
 
 function loadRates() {
@@ -2766,6 +2537,7 @@ function loadRates() {
 }
 
 function saveRates() {
+  // 讀取目前輸入值
   Object.keys(_lootRates).forEach(key => {
     const el = document.getElementById('rate-input-' + key);
     if (el) _lootRates[key] = Math.max(0, parseFloat(el.value) || 0);
@@ -2788,6 +2560,7 @@ function renderRatesPanel() {
   const grid = document.getElementById('lootRatesGrid');
   if (!grid) return;
   grid.innerHTML = '';
+
   const order = ['common','uncommon','rare','epic','legendary'];
   order.forEach(key => {
     const rm = RARITY_META[key];
@@ -2798,10 +2571,11 @@ function renderRatesPanel() {
       <div class="loot-rate-dot" style="background:${rm.color};box-shadow:0 0 6px ${rm.color}44"></div>
       <div class="loot-rate-label" style="color:${rm.color}">${rm.label}</div>
       <input class="loot-rate-slider" type="range" id="rate-slider-${key}" min="0" max="100" step="0.5" value="${val}"
-        oninput="syncRate('${key}', this.value)">
+        oninput="syncRate('${key}', this.value)"
+        style="--thumb-color:${rm.color}">
       <input class="loot-rate-num" type="number" id="rate-input-${key}" min="0" max="999" step="0.5" value="${val}"
         oninput="syncRate('${key}', this.value)">
-      <span style="font-size:12px;color:var(--text-muted);font-family:'Cinzel',serif">點數</span>
+      <span style="font-size:11px;color:var(--text-muted);font-family:'Cinzel',serif">點數</span>
     `;
     grid.appendChild(row);
   });
@@ -2831,7 +2605,7 @@ function renderRatesPreview() {
     const row = document.createElement('div');
     row.className = 'loot-preview-bar-wrap';
     row.innerHTML = `
-      <span style="font-family:'Cinzel',serif;font-size:12px;color:${rm.color};width:48px;flex-shrink:0">${rm.label}</span>
+      <span style="font-family:'Cinzel',serif;font-size:11px;color:${rm.color};width:48px;flex-shrink:0">${rm.label}</span>
       <div class="loot-preview-track">
         <div class="loot-preview-fill" style="width:${pct.toFixed(1)}%;background:${rm.color}"></div>
       </div>
@@ -2841,8 +2615,9 @@ function renderRatesPreview() {
   });
 }
 
-// 依機率抽稀有度（純機率，不用權重）
+// ── 依機率抽出一個稀有度 ──────────────────────
 function pickRarity(pool) {
+  // 先看 pool 裡有哪些稀有度
   const available = [...new Set(pool.map(e => e.rarity))];
   const order = ['common','uncommon','rare','epic','legendary'];
   const weights = {};
@@ -2863,10 +2638,16 @@ function pickRarity(pool) {
   return available[available.length - 1];
 }
 
-// ── 抽取邏輯（純機率，無權重）──
+// ════════════════════════════════════════
+// 抽取邏輯（使用稀有度機率）
+// ════════════════════════════════════════
 function rollLoot() {
-  let pool = _lootSource === 'all' ? [..._lootDB] : _lootDB.filter(e => e.source === _lootSource);
+  // 過濾掉落池
+  let pool = _lootSource === 'all'
+    ? [..._lootDB]
+    : _lootDB.filter(e => e.source === _lootSource);
 
+  // 保證最低稀有度
   const minRank = parseInt(document.getElementById('lootMinRarity').value) || 0;
   if (minRank > 0) {
     const filtered = pool.filter(e => (RARITY_META[e.rarity]?.rank || 1) >= minRank);
@@ -2885,28 +2666,39 @@ function rollLoot() {
   const rolled = [];
 
   for (let i = 0; i < numItems; i++) {
-    // 1. 依機率決定稀有度
+    // 1. 依機率設定決定本次物品稀有度
     const targetRarity = pickRarity(pool);
-    // 2. 從該稀有度池隨機抽（均等機率，無權重）
+    // 2. 從該稀有度的物品池中依個別權重抽取
     const subPool = pool.filter(e => e.rarity === targetRarity);
-    const usePool = subPool.length ? subPool : pool;
-    const chosen = usePool[Math.floor(Math.random() * usePool.length)];
+    const fallback = subPool.length ? subPool : pool;
+    const totalW = fallback.reduce((s, e) => s + (e.weight || 1), 0);
+    let pick = Math.random() * totalW;
+    let chosen = fallback[fallback.length - 1];
+    for (const entry of fallback) {
+      pick -= (entry.weight || 1);
+      if (pick <= 0) { chosen = entry; break; }
+    }
     const qty = randBetween(chosen.minQty || 1, chosen.maxQty || 1);
     const existing = rolled.find(r => r.id === chosen.id);
     if (existing) existing.qty += qty;
     else rolled.push({ ...chosen, qty });
   }
 
+  // 整體稀有度 = 最高稀有度
   const topRarity = rolled.reduce((best, item) => {
     const rank = RARITY_META[item.rarity]?.rank || 1;
     return rank > (RARITY_META[best]?.rank || 1) ? item.rarity : best;
   }, 'common');
 
+  // 玩家名稱
+  const playerName = document.getElementById('lootPlayerName').value.trim() || '冒險者';
+
+  // 顯示結果
   const card = document.getElementById('lootResultCard');
   card.className = 'loot-result-card show';
 
   const sourceLabel = _lootSource === 'all' ? '' : ` ・ ${_lootSource}`;
-  document.getElementById('lootResultWho').textContent = `🎯 獲得物品${sourceLabel}`;
+  document.getElementById('lootResultWho').textContent = `🎯 ${playerName} 的收穫${sourceLabel}`;
 
   const rm = RARITY_META[topRarity];
   const rarityEl = document.getElementById('lootResultRarity');
@@ -2921,38 +2713,44 @@ function rollLoot() {
     rolled.forEach(item => {
       const rm2 = RARITY_META[item.rarity] || RARITY_META.common;
       const row = document.createElement('div');
-      row.className = 'loot-item-row ' + rm2.rowCls;
+      row.className = 'loot-item-row';
+      row.style.borderLeftColor = rm2.color;
+      row.style.borderLeftWidth = '3px';
       row.innerHTML = `
         <div class="loot-item-icon">${item.icon || '📦'}</div>
-        <div class="loot-item-info">
+        <div style="flex:1">
           <div class="loot-item-name">${escH(item.name)}</div>
-          ${item.note ? `<div class="loot-item-note">${escH(item.note)}</div>` : ''}
+          ${item.note ? `<div class="loot-item-cat">${escH(item.note)}</div>` : ''}
         </div>
-        <div style="text-align:right;flex-shrink:0">
+        <div style="text-align:right">
           <div class="loot-item-qty">× ${item.qty.toLocaleString()}</div>
-          <div class="loot-item-rarity-tag" style="background:${rm2.color}22;border:1px solid ${rm2.color};color:${rm2.color}">${rm2.dot} ${rm2.label}</div>
+          <div class="loot-item-cat" style="color:${rm2.color}">${rm2.dot} ${rm2.label}</div>
         </div>
       `;
       list.appendChild(row);
     });
   }
 
+  // 加入歷史
   _lootHistory.unshift({
     ts: new Date().toLocaleString('zh-TW', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' }),
+    player: playerName,
     source: _lootSource,
     rarity: topRarity,
     items: rolled.map(i => `${i.icon||''}${i.name}×${i.qty}`)
   });
   saveLootDB();
   renderLootHistory();
-  card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  // 捲動到結果
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function randBetween(a, b) {
   return Math.floor(Math.random() * (b - a + 1)) + a;
 }
 
-// ── 新增掉落物 ──
+// ── 新增掉落物 ────────────────────────────────
 function addLootEntry() {
   const icon   = document.getElementById('dbIcon').value.trim() || '📦';
   const name   = document.getElementById('dbName').value.trim();
@@ -2960,27 +2758,39 @@ function addLootEntry() {
   const rarity = document.getElementById('dbRarity').value;
   const minQty = parseInt(document.getElementById('dbMinQty').value) || 1;
   const maxQty = parseInt(document.getElementById('dbMaxQty').value) || 1;
+  const weight = parseInt(document.getElementById('dbWeight').value) || 10;
   const note   = document.getElementById('dbNote').value.trim();
 
   if (!name) { alert('請輸入物品名稱！'); return; }
 
-  _lootDB.push({ id:uid(), icon, name, source, rarity,
-    minQty:Math.min(minQty,maxQty), maxQty:Math.max(minQty,maxQty), note });
-  saveLootDB(); renderLootDB(); rebuildSourceTabs();
+  _lootDB.push({
+    id: uid(), icon, name, source, rarity,
+    minQty: Math.min(minQty, maxQty),
+    maxQty: Math.max(minQty, maxQty),
+    weight, note
+  });
+  saveLootDB();
+  renderLootDB();
+  rebuildSourceTabs();
+
+  // 清空
   ['dbIcon','dbName','dbNote'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('dbMinQty').value = '1';
   document.getElementById('dbMaxQty').value = '1';
+  document.getElementById('dbWeight').value = '10';
   document.getElementById('dbRarity').value = 'common';
 }
 
-// ── 渲染資料庫 ──
+// ── 渲染資料庫 ────────────────────────────────
 function renderLootDB(filter = '') {
   const list = document.getElementById('lootDBList');
   const countEl = document.getElementById('lootDBCount');
   if (!list) return;
 
   const q = filter.toLowerCase();
-  const visible = _lootDB.filter(e => !q || e.name.toLowerCase().includes(q) || (e.source||'').toLowerCase().includes(q));
+  const visible = _lootDB.filter(e =>
+    !q || e.name.toLowerCase().includes(q) || (e.source||'').toLowerCase().includes(q)
+  );
 
   if (countEl) countEl.textContent = `（${_lootDB.length} 項）`;
   list.innerHTML = '';
@@ -2994,24 +2804,20 @@ function renderLootDB(filter = '') {
     const rm = RARITY_META[entry.rarity] || RARITY_META.common;
     const row = document.createElement('div');
     row.className = 'loot-db-entry';
-    row.id = 'db-entry-' + entry.id;
     row.innerHTML = `
-      <div class="loot-db-entry-top">
-        <div class="loot-db-entry-icon">${entry.icon || '📦'}</div>
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-            <span class="loot-db-entry-name">${escH(entry.name)}</span>
-            <span class="loot-db-badge" style="background:${rm.color}22;border:1px solid ${rm.color};color:${rm.color}">${rm.dot} ${rm.label}</span>
-            ${entry.source ? `<span class="loot-src-chip">${escH(entry.source)}</span>` : ''}
-          </div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">
-            ×${entry.minQty}~${entry.maxQty}
-            ${entry.note ? ' &nbsp;・&nbsp; ' + escH(entry.note) : ''}
-          </div>
+      <div class="loot-db-entry-icon">${entry.icon || '📦'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span class="loot-db-entry-name">${escH(entry.name)}</span>
+      <span class="loot-db-badge" style="background:rgba(0,0,0,0.3);border:1px solid ${rm.color};color:${rm.color}">${rm.dot} ${rm.label}</span>
+          ${entry.source ? `<span class="loot-src-chip">${escH(entry.source)}</span>` : ''}
         </div>
-        <button class="loot-db-edit-btn" onclick="openEditLootModal('${entry.id}')">✏ 修改</button>
-        <button class="loot-db-del" onclick="deleteLootEntry('${entry.id}')">✕</button>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">
+          ×${entry.minQty}~${entry.maxQty} &nbsp;・&nbsp; 權重 ${entry.weight}
+          ${entry.note ? ' &nbsp;・&nbsp; ' + escH(entry.note) : ''}
+        </div>
       </div>
+      <button class="loot-db-del" onclick="deleteLootEntry('${entry.id}')">✕</button>
     `;
     list.appendChild(row);
   });
@@ -3021,70 +2827,32 @@ function filterLootDB(val) { renderLootDB(val); }
 
 function deleteLootEntry(id) {
   _lootDB = _lootDB.filter(e => e.id !== id);
-  saveLootDB(); renderLootDB(); rebuildSourceTabs();
+  saveLootDB();
+  renderLootDB();
+  rebuildSourceTabs();
 }
 
-// ── 修改掉落物 Modal ──
-function openEditLootModal(id) {
-  const entry = _lootDB.find(e => e.id === id);
-  if (!entry) return;
-  document.getElementById('editLootId').value = id;
-  document.getElementById('editDbIcon').value = entry.icon || '📦';
-  document.getElementById('editDbName').value = entry.name;
-  document.getElementById('editDbSource').value = entry.source || '';
-  document.getElementById('editDbRarity').value = entry.rarity;
-  document.getElementById('editDbMinQty').value = entry.minQty || 1;
-  document.getElementById('editDbMaxQty').value = entry.maxQty || 1;
-  document.getElementById('editDbNote').value = entry.note || '';
-  document.getElementById('editLootModalOverlay').classList.add('show');
-}
-
-function closeEditLootModal(e) {
-  if (e.target === document.getElementById('editLootModalOverlay')) {
-    document.getElementById('editLootModalOverlay').classList.remove('show');
-  }
-}
-
-function saveEditLoot() {
-  const id = document.getElementById('editLootId').value;
-  const entry = _lootDB.find(e => e.id === id);
-  if (!entry) return;
-
-  const name = document.getElementById('editDbName').value.trim();
-  if (!name) { alert('請輸入物品名稱！'); return; }
-
-  entry.icon   = document.getElementById('editDbIcon').value.trim() || '📦';
-  entry.name   = name;
-  entry.source = document.getElementById('editDbSource').value.trim() || '一般';
-  entry.rarity = document.getElementById('editDbRarity').value;
-  const minQty = parseInt(document.getElementById('editDbMinQty').value) || 1;
-  const maxQty = parseInt(document.getElementById('editDbMaxQty').value) || 1;
-  entry.minQty = Math.min(minQty, maxQty);
-  entry.maxQty = Math.max(minQty, maxQty);
-  entry.note   = document.getElementById('editDbNote').value.trim();
-
-  saveLootDB(); renderLootDB(); rebuildSourceTabs();
-  document.getElementById('editLootModalOverlay').classList.remove('show');
-}
-
-// ── 歷史紀錄 ──
+// ── 歷史紀錄 ──────────────────────────────────
 function renderLootHistory() {
   const list = document.getElementById('lootHistoryList');
   if (!list) return;
   list.innerHTML = '';
+
   if (!_lootHistory.length) {
     list.innerHTML = '<div class="loot-empty-msg">尚無任何抽取紀錄</div>';
     return;
   }
+
   _lootHistory.slice(0, 50).forEach(h => {
     const rm = RARITY_META[h.rarity] || RARITY_META.common;
     const card = document.createElement('div');
     card.className = 'loot-hist-card';
     card.innerHTML = `
       <div class="loot-hist-top">
+        <span class="loot-hist-who">🎯 ${escH(h.player)}</span>
         ${h.source && h.source !== 'all' ? `<span class="loot-src-chip">${escH(h.source)}</span>` : ''}
-        <span class="loot-rarity-badge ${rm.badgeCls}" style="font-size:10px;padding:3px 10px">${rm.label}</span>
-        <span class="loot-hist-time" style="margin-left:auto">${h.ts}</span>
+        <span class="loot-rarity-badge ${rm.badgeCls}" style="font-size:9px;padding:2px 8px">${rm.label}</span>
+        <span class="loot-hist-time">${h.ts}</span>
       </div>
       <div class="loot-hist-items">${h.items.map(i => escH(i)).join(' ・ ')}</div>
     `;
@@ -3095,9 +2863,11 @@ function renderLootHistory() {
 function clearLootHistory() {
   if (!confirm('確定要清除所有歷史紀錄？')) return;
   _lootHistory = [];
-  saveLootDB(); renderLootHistory();
+  saveLootDB();
+  renderLootHistory();
 }
 
+// ── 子頁籤切換 ────────────────────────────────
 function switchLootSub(name) {
   const tabs = ['roll','db','rates','history'];
   document.querySelectorAll('.loot-sub-tab').forEach((b,i) => {
@@ -3110,22 +2880,12 @@ function switchLootSub(name) {
   if (name === 'history') renderLootHistory();
 }
 
+// 在頁面啟動時初始化
 document.addEventListener('DOMContentLoaded', loadLootDB);
 
 // ════════════════════════════════════════
-// UTILS
-// ════════════════════════════════════════
-function escH(str) {
-  return String(str ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ════════════════════════════════════════
-// 初始化預設備忘 & 異常狀態
-// ════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  buildConditions();
-
-  // 預設範例備忘
+// 預設範例備忘
+(function() {
   const grid = document.getElementById('memo-grid');
   const exCard = document.createElement('div');
   exCard.className = 'memo-card';
@@ -3136,21 +2896,346 @@ document.addEventListener('DOMContentLoaded', () => {
       <button class="btn-icon" onclick="this.closest('.memo-card').remove()">✕</button>
     </div>
     <div class="memo-body">
-      <textarea class="memo-textarea" rows="5">這是你的 D&D 城主面板。
+      <textarea class="memo-textarea" rows="4">這是你的 D&D 城主面板。
 • 備忘錄：記錄提示，點「🔔 提示玩家」可彈出大型提示框
-• 拖拽中間橫條可自由調整備忘錄高度
-• NPC / 怪物：點圖示可上傳角色圖片
-• 異常狀態：已預填 2024 版 D&D 官方狀態，點選文字直接編輯
-• 同步：設定 Google Sheets URL 後可開啟自動同步</textarea>
+• NPC / 怪物：按「＋ 新增」可建立卡片，只填名稱也沒問題
+• 異常狀態：預填 5e 官方狀態，點文字直接編輯</textarea>
     </div>
-    <div class="memo-resize-bar" onmousedown="startMemoResize(event, 0)"></div>
     <div class="memo-footer">
-      <span style="flex:1;color:var(--text-muted);font-size:11px;">拖拽中間橫條可調整高度</span>
+      <span style="flex:1;color:var(--text-muted);font-size:11px;">點選文字即可編輯</span>
       <button class="memo-ping-btn" onclick="showAlert('⚔ 冒險開始！','準備好了嗎？玩家已就位，命運的骰子即將落下…')">🔔 提示玩家</button>
     </div>
   `;
   grid.appendChild(exCard);
-});
+})();
+
+// Targeted additions: keep the original dashboard layout, only adjust requested behavior.
+(function() {
+  const DEFAULT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx9_6h1AbdLEuP284B8CgUBn9aN3in0z4imjye665_Tz4mGom-ZfovFOv3dWz6vmTAHkA/exec';
+  let autoSyncTimer = null;
+  let isAutoLoadingSheet = false;
+
+  function scheduleSheetSync() {
+    clearTimeout(autoSyncTimer);
+    autoSyncTimer = setTimeout(() => {
+      const url = document.getElementById('sheetUrlInput')?.value.trim();
+      if (url && typeof syncToSheet === 'function') syncToSheet();
+    }, 1800);
+  }
+
+  document.addEventListener('input', scheduleSheetSync);
+  document.addEventListener('change', scheduleSheetSync);
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlInput = document.getElementById('sheetUrlInput');
+    if (urlInput && !urlInput.value.trim()) {
+      urlInput.value = DEFAULT_SHEET_URL;
+      localStorage.setItem('dnd_sheet_url', DEFAULT_SHEET_URL);
+    }
+    ensureLootEditId();
+    const qtyLabel = document.querySelector('#dbMinQty')?.closest('.loot-field-row')?.previousElementSibling;
+    if (qtyLabel) qtyLabel.textContent = '數量範圍';
+    ensureConditions();
+    arrangeLootRollLayout();
+    autoLoadSheetOnOpen();
+  });
+
+  async function autoLoadSheetOnOpen() {
+    if (isAutoLoadingSheet || typeof loadFromSheet !== 'function') return;
+    const url = document.getElementById('sheetUrlInput')?.value.trim();
+    if (!url) return;
+    isAutoLoadingSheet = true;
+    const originalConfirm = window.confirm;
+    window.confirm = () => true;
+    try {
+      await loadFromSheet();
+    } catch (err) {
+      console.warn('Auto load from Sheet failed:', err);
+    } finally {
+      window.confirm = originalConfirm;
+      isAutoLoadingSheet = false;
+    }
+  }
+
+  function arrangeLootRollLayout() {
+    const panel = document.getElementById('loot-panel-roll');
+    const result = document.getElementById('lootResultCard');
+    if (!panel || !result || panel.querySelector('.loot-roll-controls')) return;
+
+    const controls = document.createElement('div');
+    controls.className = 'loot-roll-controls';
+    const resultZone = document.createElement('div');
+    resultZone.className = 'loot-result-zone';
+
+    [...panel.childNodes].forEach(node => {
+      if (node === result) resultZone.appendChild(node);
+      else controls.appendChild(node);
+    });
+    panel.appendChild(controls);
+    panel.appendChild(resultZone);
+  }
+
+  function ensureConditions() {
+    const grid = document.getElementById('cond-grid');
+    if (!grid || grid.children.length) return;
+    const conditions = [
+      ['目盲 Blinded', '無法看見；需要視覺的能力檢定自動失敗。攻擊該生物的攻擊擲骰具有優勢，該生物的攻擊擲骰具有劣勢。'],
+      ['魅惑 Charmed', '不能攻擊魅惑者，也不能以有害能力或魔法效果指定魅惑者。魅惑者與其社交互動的能力檢定具有優勢。'],
+      ['耳聾 Deafened', '無法聽見；需要聽覺的能力檢定自動失敗。'],
+      ['力竭 Exhaustion', '每有一級力竭，D20 Test 減 2，速度減少 5 呎。力竭達 6 級時死亡；完成長休後力竭等級減 1。'],
+      ['恐懼 Frightened', '當恐懼來源在視線內時，能力檢定與攻擊擲骰具有劣勢。不能自願移動到更接近恐懼來源的位置。'],
+      ['擒抱 Grappled', '速度變為 0 且不能增加。攻擊擒抱者以外的目標具有劣勢；擒抱者可拖動或攜帶被擒抱者。'],
+      ['失能 Incapacitated', '不能採取動作、附贈動作或反應；專注中斷；不能說話。若在先攻時已失能，先攻擲骰具有劣勢。'],
+      ['隱形 Invisible', '通常無法被看見。攻擊該生物的攻擊擲骰具有劣勢，該生物的攻擊擲骰具有優勢。'],
+      ['麻痺 Paralyzed', '同時失能；速度為 0；不能移動或說話；力量與敏捷豁免自動失敗。近距離命中的攻擊會造成重擊。'],
+      ['石化 Petrified', '變成無生命固體物質；同時失能，速度為 0，攻擊該生物有優勢，力量與敏捷豁免自動失敗，對所有傷害有抗性，免疫中毒。'],
+      ['中毒 Poisoned', '攻擊擲骰與能力檢定具有劣勢。'],
+      ['倒地 Prone', '唯一移動選項通常是爬行，除非先站起。近戰攻擊該生物有優勢；5 呎外的攻擊擲骰有劣勢。自身攻擊擲骰有劣勢。'],
+      ['束縛 Restrained', '速度為 0 且不能增加。攻擊該生物有優勢，該生物攻擊有劣勢；敏捷豁免具有劣勢。'],
+      ['震懾 Stunned', '同時失能；速度為 0；不能移動；只能斷續說話。力量與敏捷豁免自動失敗，攻擊該生物有優勢。'],
+      ['昏迷 Unconscious', '同時失能與倒地；速度為 0；不能移動或說話；不知道周遭。掉落手持物，力量與敏捷豁免自動失敗，攻擊該生物有優勢，近距離命中會造成重擊。']
+    ];
+    conditions.forEach(([name, effect]) => grid.appendChild(createCondCard('◆', name, effect)));
+  }
+
+  const originalAddEntity = window.addEntity;
+  window.addEntity = function(type) {
+    originalAddEntity(type);
+    addImagePanelToEntity(type, entityId);
+  };
+
+  function addImagePanelToEntity(type, id, src = '') {
+    const body = document.getElementById('body-' + id);
+    if (!body) return;
+    const existing = body.querySelector('.entity-image-panel');
+    if (existing) {
+      const input = existing.querySelector('.entity-image-input');
+      const preview = existing.querySelector('.entity-image-preview');
+      if (input) input.dataset.image = src || input.dataset.image || '';
+      if (src && preview) preview.innerHTML = `<img src="${src}" alt="">`;
+      return;
+    }
+    const panel = document.createElement('div');
+    panel.className = 'entity-image-panel';
+    panel.innerHTML = `
+      <div class="field-label">圖片</div>
+      <div class="entity-image-preview" id="entity-img-preview-${id}">
+        ${src ? `<img src="${src}" alt="">` : '<span>尚未上傳圖片</span>'}
+      </div>
+      <input class="entity-image-input" type="file" accept="image/*" data-image="${src}" onchange="setEntityImage(${id}, this)" style="margin-top:8px;width:100%">
+    `;
+    body.insertBefore(panel, body.firstElementChild);
+  }
+
+  window.setEntityImage = function(id, input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      input.dataset.image = reader.result;
+      const preview = document.getElementById('entity-img-preview-' + id);
+      if (preview) preview.innerHTML = `<img src="${reader.result}" alt="">`;
+      scheduleSheetSync();
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const originalCollectDashboardData = window.collectDashboardData;
+  window.collectDashboardData = function() {
+    const data = originalCollectDashboardData();
+    ['ally','enemy','monster'].forEach(type => {
+      document.querySelectorAll(`#list-${type} .entity-card`).forEach((card, i) => {
+        const img = card.querySelector('.entity-image-input')?.dataset.image || '';
+        if (data.entities?.[type]?.[i]) data.entities[type][i].image = img;
+      });
+    });
+    return data;
+  };
+
+  const originalRestoreDashboardData = window.restoreDashboardData;
+  window.restoreDashboardData = function(data) {
+    originalRestoreDashboardData(data);
+    ['ally','enemy','monster'].forEach(type => {
+      (data.entities?.[type] || []).forEach((item, index) => {
+        const card = document.querySelectorAll(`#list-${type} .entity-card`)[index];
+        const id = card?.id?.match(/entity-(\d+)/)?.[1];
+        if (id) addImagePanelToEntity(type, id, item.image || '');
+      });
+    });
+  };
+
+  window.addLootEntry = function() {
+    const icon   = document.getElementById('dbIcon').value.trim() || '🎁';
+    const name   = document.getElementById('dbName').value.trim();
+    const source = document.getElementById('dbSource').value.trim() || '未分類';
+    const rarity = document.getElementById('dbRarity').value;
+    const minQty = parseInt(document.getElementById('dbMinQty').value) || 1;
+    const maxQty = parseInt(document.getElementById('dbMaxQty').value) || 1;
+    const note   = document.getElementById('dbNote').value.trim();
+    const editId = document.getElementById('dbEditId')?.value || '';
+
+    if (!name) { alert('請輸入物品名稱'); return; }
+
+    const entry = {
+      id: editId || uid(), icon, name, source, rarity,
+      minQty: Math.min(minQty, maxQty),
+      maxQty: Math.max(minQty, maxQty),
+      note
+    };
+    const idx = _lootDB.findIndex(item => item.id === editId);
+    if (idx >= 0) _lootDB[idx] = entry;
+    else _lootDB.push(entry);
+
+    saveLootDB();
+    renderLootDB();
+    rebuildSourceTabs();
+    clearLootForm();
+    scheduleSheetSync();
+  };
+
+  window.editLootEntry = function(id) {
+    const item = _lootDB.find(entry => entry.id === id);
+    if (!item) return;
+    ensureLootEditId().value = item.id;
+    document.getElementById('dbIcon').value = item.icon || '';
+    document.getElementById('dbName').value = item.name || '';
+    document.getElementById('dbSource').value = item.source || '';
+    document.getElementById('dbRarity').value = item.rarity || 'common';
+    document.getElementById('dbMinQty').value = item.minQty || 1;
+    document.getElementById('dbMaxQty').value = item.maxQty || 1;
+    document.getElementById('dbNote').value = item.note || '';
+    const btn = document.querySelector('[onclick="addLootEntry()"]');
+    if (btn) btn.textContent = '儲存修改';
+  };
+
+  function ensureLootEditId() {
+    let input = document.getElementById('dbEditId');
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.id = 'dbEditId';
+      document.getElementById('dbName')?.parentElement?.appendChild(input);
+    }
+    return input;
+  }
+
+  function clearLootForm() {
+    ensureLootEditId().value = '';
+    ['dbIcon','dbName','dbNote'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('dbMinQty').value = '1';
+    document.getElementById('dbMaxQty').value = '1';
+    document.getElementById('dbRarity').value = 'common';
+    const btn = document.querySelector('[onclick="addLootEntry()"]');
+    if (btn) btn.textContent = '新增至資料庫';
+  }
+
+  window.renderLootDB = function(filter = '') {
+    const list = document.getElementById('lootDBList');
+    const countEl = document.getElementById('lootDBCount');
+    if (!list) return;
+    const q = String(filter || '').toLowerCase();
+    const visible = _lootDB.filter(e => !q || e.name.toLowerCase().includes(q) || (e.source || '').toLowerCase().includes(q));
+    if (countEl) countEl.textContent = `（${_lootDB.length} 項）`;
+    list.innerHTML = '';
+    if (!visible.length) {
+      list.innerHTML = '<div class="loot-db-empty">尚無掉落物</div>';
+      return;
+    }
+    visible.forEach(entry => {
+      const rm = RARITY_META[entry.rarity] || RARITY_META.common;
+      const row = document.createElement('div');
+      row.className = 'loot-db-entry';
+      row.innerHTML = `
+        <div class="loot-db-entry-icon">${entry.icon || '🎁'}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span class="loot-db-entry-name">${escH(entry.name)}</span>
+            <span class="loot-db-badge" style="background:rgba(0,0,0,0.3);border:1px solid ${rm.color};color:${rm.color}">${rm.label}</span>
+            ${entry.source ? `<span class="loot-src-chip">${escH(entry.source)}</span>` : ''}
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">
+            數量 ${entry.minQty}~${entry.maxQty}${entry.note ? ' · ' + escH(entry.note) : ''}
+          </div>
+        </div>
+        <button class="loot-db-del" onclick="editLootEntry('${entry.id}')">改</button>
+        <button class="loot-db-del" onclick="deleteLootEntry('${entry.id}')">×</button>
+      `;
+      list.appendChild(row);
+    });
+  };
+
+  window.rollLoot = function() {
+    let pool = _lootSource === 'all' ? [..._lootDB] : _lootDB.filter(e => e.source === _lootSource);
+    const minRank = parseInt(document.getElementById('lootMinRarity').value) || 0;
+    if (minRank > 0) {
+      const filtered = pool.filter(e => (RARITY_META[e.rarity]?.rank || 1) >= minRank);
+      if (filtered.length) pool = filtered;
+    }
+    if (!pool.length) { alert('目前沒有可抽取的掉落物'); return; }
+
+    const minItems = Math.max(1, parseInt(document.getElementById('lootMinItems').value) || 1);
+    const maxItems = Math.max(minItems, parseInt(document.getElementById('lootMaxItems').value) || 3);
+    const numItems = randBetween(minItems, maxItems);
+    const rolled = [];
+
+    for (let i = 0; i < numItems; i++) {
+      const targetRarity = pickRarity(pool);
+      const subPool = pool.filter(e => e.rarity === targetRarity);
+      const fallback = subPool.length ? subPool : pool;
+      const chosen = fallback[Math.floor(Math.random() * fallback.length)];
+      const qty = randBetween(chosen.minQty || 1, chosen.maxQty || 1);
+      const existing = rolled.find(r => r.id === chosen.id);
+      if (existing) existing.qty += qty;
+      else rolled.push({ ...chosen, qty });
+    }
+
+    const topRarity = rolled.reduce((best, item) => {
+      const rank = RARITY_META[item.rarity]?.rank || 1;
+      return rank > (RARITY_META[best]?.rank || 1) ? item.rarity : best;
+    }, 'common');
+
+    const card = document.getElementById('lootResultCard');
+    card.className = 'loot-result-card show';
+    const sourceLabel = _lootSource === 'all' ? '' : `（${_lootSource}）`;
+    document.getElementById('lootResultWho').textContent = `獲得物品 ${sourceLabel}`;
+    const rm = RARITY_META[topRarity];
+    const rarityEl = document.getElementById('lootResultRarity');
+    rarityEl.className = 'loot-rarity-badge ' + rm.badgeCls;
+    rarityEl.textContent = rm.label;
+
+    const list = document.getElementById('lootItemsList');
+    list.innerHTML = '';
+    rolled.forEach(item => {
+      const rm2 = RARITY_META[item.rarity] || RARITY_META.common;
+      const row = document.createElement('div');
+      row.className = 'loot-item-row';
+      row.style.borderLeftColor = rm2.color;
+      row.style.borderLeftWidth = '4px';
+      row.style.background = rm2.color + '22';
+      row.innerHTML = `
+        <div class="loot-item-icon">${item.icon || '🎁'}</div>
+        <div style="flex:1;text-align:left">
+          <div class="loot-item-name" style="font-size:16px;font-weight:700;text-align:left">${escH(item.name)} × ${item.qty.toLocaleString()}</div>
+          ${item.note ? `<div class="loot-item-cat">${escH(item.note)}</div>` : ''}
+        </div>
+        <div style="text-align:left">
+          <div class="loot-item-cat" style="color:${rm2.color}">${rm2.label}</div>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+
+    _lootHistory.unshift({
+      ts: new Date().toLocaleString('zh-TW', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' }),
+      player: '獲得物品',
+      source: _lootSource,
+      rarity: topRarity,
+      items: rolled.map(i => `${i.icon || ''}${i.name} × ${i.qty}`)
+    });
+    saveLootDB();
+    renderLootHistory();
+    scheduleSheetSync();
+  };
+})();
 </script>
 </body>
 </html>
